@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Singadu</string>
+    <string name="app_name_full">Sistem Pengaduan Terpadu</string>
+    <string name="logo_bps">Logo BPS</string>
+    <string name="nama">Nama Lengkap</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="konfirmasi_password">Konfirmasi Password</string>
+    <string name="login">Login</string>
+    <string name="link_daftar">Daftar akun baru</string>
+    <string name="register">Daftar</string>
 </resources>
