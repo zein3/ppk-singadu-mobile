@@ -7,6 +7,9 @@
     <string name="password">Password</string>
     <string name="konfirmasi_password">Konfirmasi Password</string>
     <string name="login">Login</string>
-    <string name="link_daftar">Daftar akun baru</string>
+    <string name="link_daftar">Buat akun</string>
     <string name="register">Daftar</string>
+    <string name="menu">Menu</string>
+    <string name="profile">Profil</string>
+    <string name="kembali">Kembali</string>
 </resources>
