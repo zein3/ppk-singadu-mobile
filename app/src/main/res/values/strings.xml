@@ -12,4 +12,9 @@
     <string name="menu">Menu</string>
     <string name="profile">Profil</string>
     <string name="kembali">Kembali</string>
+    <string name="menu_beranda">Beranda</string>
+    <string name="menu_manajemen_user">Manajemen User</string>
+    <string name="menu_manajemen_jenis_masalah">Manajemen Jenis Masalah</string>
+    <string name="menu_pengaturan">Pengaturan</string>
+    <string name="logout">Keluar</string>
 </resources>

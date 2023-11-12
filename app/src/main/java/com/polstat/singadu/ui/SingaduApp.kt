@@ -7,14 +7,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -70,7 +77,16 @@ fun SingaduApp(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                SingaduDrawer()
+                SingaduDrawer(
+                    navController = navController,
+                    closeDrawer = {
+                        scope.launch {
+                            drawerState.apply {
+                                close()
+                            }
+                        }
+                    }
+                )
             }
         }
     ) {
@@ -164,18 +180,60 @@ fun SingaduAppBar(
 
 @Composable
 fun SingaduDrawer(
-    modifier: Modifier = Modifier
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    closeDrawer: () -> Unit = {}
 ) {
-    Column {
-        Image(
-            painter = painterResource(id = R.drawable.bps),
-            contentDescription = stringResource(id = R.string.logo_bps),
-            modifier = Modifier.size(32.dp)
-        )
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
 
-        DrawerNavigationItem(Icons.Filled.Person, R.string.kembali)
-        DrawerNavigationItem(Icons.Filled.Add, R.string.app_name)
-        DrawerNavigationItem(Icons.Filled.Build, R.string.kembali)
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = closeDrawer) {
+                Icon(
+                    Icons.Filled.ArrowBack,
+                    contentDescription = stringResource(id = R.string.kembali)
+                )
+            }
+            
+            Text(
+                text = stringResource(id = R.string.menu)
+            )
+        }
+
+        DrawerNavigationItem(
+            Icons.Filled.Home,
+            text = R.string.menu_beranda
+        ) {
+            closeDrawer()
+        }
+        DrawerNavigationItem(
+            Icons.Filled.Face,
+            text = R.string.menu_manajemen_user
+        ) {
+            closeDrawer()
+        }
+        DrawerNavigationItem(
+            icons = Icons.Filled.MailOutline,
+            text = R.string.menu_manajemen_jenis_masalah
+        ) {
+            closeDrawer()
+        }
+        DrawerNavigationItem(
+            Icons.Filled.Settings,
+            text = R.string.menu_pengaturan
+        ) {
+            closeDrawer()
+        }
+        DrawerNavigationItem(
+            icons = Icons.Filled.ExitToApp,
+            text = R.string.logout
+        ) {
+            navController.navigate(SingaduScreen.Login.name)
+            closeDrawer()
+        }
     }
 }
 
@@ -186,12 +244,17 @@ fun DrawerNavigationItem(
     onClick: () -> Unit = {}
 ) {
     Row(
-        modifier = Modifier.clickable { onClick() }
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Icon(
             icons,
             contentDescription = null
         )
+
+        Spacer(modifier = Modifier.padding(4.dp))
 
         Text(
             text = stringResource(id = text)
@@ -211,6 +274,8 @@ fun SingaduAppBarPreview() {
 @Composable
 fun SingaduDrawerPreview() {
     SingaduTheme {
-        SingaduDrawer()
+        SingaduDrawer(
+            navController = rememberNavController()
+        )
     }
 }
