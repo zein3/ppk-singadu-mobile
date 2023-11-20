@@ -16,5 +16,7 @@
     <string name="menu_manajemen_user">Manajemen User</string>
     <string name="menu_manajemen_jenis_masalah">Manajemen Jenis Masalah</string>
     <string name="menu_pengaturan">Pengaturan</string>
+    <string name="hide_password">Sembunyikan password</string>
+    <string name="show_password">Perlihatkan password</string>
     <string name="logout">Keluar</string>
 </resources>

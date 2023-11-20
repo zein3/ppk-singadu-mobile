@@ -94,27 +94,26 @@ fun RegisterScreen(
                     onValueChange = { registerViewModel.updateEmailField(it) },
                     placeholder = { Text(text = stringResource(id = R.string.email)) },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Email
+                    )
                 )
 
-                TextField(
+                PasswordTextField(
                     value = registerViewModel.passwordField,
                     onValueChange = { registerViewModel.updatePasswordField(it) },
                     placeholder = { Text(text = stringResource(id = R.string.password)) },
-                    singleLine = true,
-                    visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Password
                     )
                 )
 
-                TextField(
+                PasswordTextField(
                     value = registerViewModel.confirmPasswordField,
                     onValueChange = { registerViewModel.updateConfirmPasswordField(it) },
                     placeholder = { Text(text = stringResource(id = R.string.konfirmasi_password)) },
-                    singleLine = true,
-                    visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done,
                         keyboardType = KeyboardType.Password
