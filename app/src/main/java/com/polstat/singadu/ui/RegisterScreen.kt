@@ -1,7 +1,9 @@
 package com.polstat.singadu.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +11,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,29 +24,39 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.polstat.singadu.R
 import com.polstat.singadu.ui.theme.SingaduTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
+    modifier: Modifier = Modifier,
     onBackButtonClicked: () -> Unit = {},
-    modifier: Modifier = Modifier
+    registerViewModel: RegisterViewModel = viewModel(factory = RegisterViewModel.Factory)
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        Card {
+        Card(
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -66,31 +82,53 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.padding(12.dp))
 
                 TextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text(text = stringResource(id = R.string.nama)) }
+                    value = registerViewModel.nameField,
+                    onValueChange = { registerViewModel.updateNameField(it) },
+                    placeholder = { Text(text = stringResource(id = R.string.nama)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
                 )
 
                 TextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text(text = stringResource(id = R.string.email)) }
+                    value = registerViewModel.emailField,
+                    onValueChange = { registerViewModel.updateEmailField(it) },
+                    placeholder = { Text(text = stringResource(id = R.string.email)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
                 )
 
                 TextField(
-                    value = "",
-                    onValueChange = {},
+                    value = registerViewModel.passwordField,
+                    onValueChange = { registerViewModel.updatePasswordField(it) },
                     placeholder = { Text(text = stringResource(id = R.string.password)) },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Password
+                    )
+                )
+
+                TextField(
+                    value = registerViewModel.confirmPasswordField,
+                    onValueChange = { registerViewModel.updateConfirmPasswordField(it) },
+                    placeholder = { Text(text = stringResource(id = R.string.konfirmasi_password)) },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password
+                    )
                 )
 
                 Spacer(modifier = Modifier.padding(top = 24.dp))
 
                 Button(
-                    onClick = { /*TODO*/ }
+                    onClick = { registerViewModel.register() }
                 ) {
                     Text(text = stringResource(id = R.string.register))
                 }
-                
+
                 Spacer(modifier = Modifier.padding(8.dp))
 
                 Text(

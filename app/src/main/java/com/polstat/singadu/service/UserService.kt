@@ -1,5 +1,6 @@
 package com.polstat.singadu.service
 
+import com.polstat.singadu.model.RegisterForm
 import com.polstat.singadu.model.User
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -7,6 +8,6 @@ import retrofit2.http.POST
 interface UserService {
 
     @POST("/register")
-    suspend fun register(@Body user: User): User
+    suspend fun register(@Body user: RegisterForm): User
 
 }
