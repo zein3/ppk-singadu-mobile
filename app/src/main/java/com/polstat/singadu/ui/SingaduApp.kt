@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -43,6 +44,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -61,8 +63,11 @@ enum class SingaduScreen {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SingaduApp(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    singaduAppViewModel: SingaduAppViewModel = viewModel(factory = SingaduAppViewModel.Factory)
 ) {
+    val token = singaduAppViewModel.token.collectAsState().value
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -113,8 +118,12 @@ fun SingaduApp(
             ) {
                 composable(route = SingaduScreen.Login.name) {
                     LoginScreen(
-                        onLoginButtonClicked = { navController.navigate(SingaduScreen.Home.name) },
-                        onRegisterButtonClicked = { navController.navigate(SingaduScreen.Register.name) }
+                        onLoginButtonClicked = {
+                            // navController.navigate(SingaduScreen.Home.name)
+                            singaduAppViewModel.attemptLogin()
+                        },
+                        onRegisterButtonClicked = { navController.navigate(SingaduScreen.Register.name) },
+                        testText = token
                     )
                 }
 

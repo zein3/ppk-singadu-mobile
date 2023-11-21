@@ -36,7 +36,8 @@ import com.polstat.singadu.ui.theme.SingaduTheme
 fun LoginScreen(
     onLoginButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    onRegisterButtonClicked: () -> Unit = {}
+    onRegisterButtonClicked: () -> Unit = {},
+    testText: String
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,6 +55,8 @@ fun LoginScreen(
                     contentDescription = stringResource(id = R.string.logo_bps),
                     modifier = Modifier.size(128.dp)
                 )
+
+                Text(text = "token:${testText}")
 
                 Text(
                     text = stringResource(id = R.string.app_name_full),
@@ -109,7 +112,8 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     SingaduTheme {
         LoginScreen(
-            onLoginButtonClicked = {}
+            onLoginButtonClicked = {},
+            testText = ""
         )
     }
 }
