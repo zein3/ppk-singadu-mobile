@@ -1,18 +1,15 @@
 package com.polstat.singadu.ui
 
-import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -28,16 +25,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,9 +47,31 @@ fun RegisterScreen(
     registerViewModel: RegisterViewModel = viewModel(factory = RegisterViewModel.Factory)
 ) {
     var showProgressDialog by rememberSaveable { mutableStateOf(false) }
-    
+    var showMessageDialog by rememberSaveable { mutableStateOf(false) }
+    var registerResult by rememberSaveable { mutableStateOf(RegisterResult.Success) }
+
+    @StringRes val messageTitle = when(registerResult) {
+        RegisterResult.Success -> R.string.sukses
+        else -> R.string.error
+    }
+    @StringRes val messageBody = when(registerResult) {
+        RegisterResult.Success -> R.string.berhasil_buat_akun
+        RegisterResult.EmptyField -> R.string.semua_field_harus_diisi
+        RegisterResult.PasswordMismatch -> R.string.password_mismatch
+        RegisterResult.NetworkError -> R.string.error
+    }
+
     if (showProgressDialog) {
         ProgressDialog(onDismissRequest = { showProgressDialog = false })
+    }
+
+    if (showMessageDialog) {
+        MessageDialog(
+            onDismissRequest = { showMessageDialog = !showMessageDialog },
+            onClose = { showMessageDialog = !showMessageDialog },
+            title = messageTitle,
+            message = messageBody
+        )
     }
 
     Column(
@@ -136,9 +151,10 @@ fun RegisterScreen(
                     onClick = {
                         showProgressDialog = true
                         registerViewModel.register(
-                            onDone = {
-                                // TODO: add success message
+                            setResult = {
+                                registerResult = it
                                 showProgressDialog = false
+                                showMessageDialog = true
                             }
                         )
                     }

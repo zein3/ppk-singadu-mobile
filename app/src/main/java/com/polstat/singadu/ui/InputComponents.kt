@@ -2,6 +2,7 @@
 
 package com.polstat.singadu.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,11 +12,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -91,4 +95,25 @@ fun ProgressDialog(
             CircularProgressIndicator()
         }
     }
+}
+
+@Composable
+fun MessageDialog(
+    onDismissRequest: () -> Unit,
+    onClose: () -> Unit,
+    @StringRes title: Int,
+    @StringRes message: Int
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Text(text = stringResource(id = title))
+        },
+        text = {
+            Text(text = stringResource(id = message))
+        },
+        confirmButton = {
+            Button(onClick = onClose) { Text(text = stringResource(R.string.tutup)) }
+        }
+    )
 }

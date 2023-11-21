@@ -1,10 +1,8 @@
 package com.polstat.singadu.ui
 
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -14,7 +12,16 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.singadu.SingaduApplication
 import com.polstat.singadu.data.UserRepository
 import com.polstat.singadu.model.RegisterForm
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+enum class RegisterResult {
+    Success,
+    EmptyField,
+    PasswordMismatch,
+    NetworkError
+}
 
 class RegisterViewModel(private val userRepository: UserRepository) : ViewModel() {
 
@@ -43,17 +50,29 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
         confirmPasswordField = password
     }
 
-    fun register(onDone: () -> Unit) {
-        if (passwordField != confirmPasswordField) {
-            // TODO: add error message
-            onDone()
+    fun register(
+        setResult: (RegisterResult) -> Unit
+    ) {
+        if (nameField == "" || emailField == "" || passwordField == "") {
+            setResult(RegisterResult.EmptyField)
             return
         }
-        viewModelScope.launch {
-            // TODO: add error handler
-            userRepository.register(RegisterForm(nameField, emailField, passwordField))
+        if (passwordField != confirmPasswordField) {
+            setResult(RegisterResult.PasswordMismatch)
+            return
+        }
 
-            onDone()
+        viewModelScope.launch {
+            try {
+                userRepository.register(RegisterForm(nameField, emailField, passwordField))
+            } catch (e: Exception) {
+                setResult(RegisterResult.NetworkError)
+                return@launch
+            }
+
+            withContext(Dispatchers.Main) {
+                setResult(RegisterResult.Success)
+            }
         }
     }
 
