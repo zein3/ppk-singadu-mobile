@@ -37,7 +37,7 @@ fun LoginScreen(
     onLoginButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
     onRegisterButtonClicked: () -> Unit = {},
-    testText: String
+    testText: String // TESTING
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -56,6 +56,7 @@ fun LoginScreen(
                     modifier = Modifier.size(128.dp)
                 )
 
+                // TESTING
                 Text(text = "token:${testText}")
 
                 Text(

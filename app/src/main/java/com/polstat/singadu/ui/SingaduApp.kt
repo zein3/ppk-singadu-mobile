@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
@@ -66,7 +64,7 @@ fun SingaduApp(
     navController: NavHostController = rememberNavController(),
     singaduAppViewModel: SingaduAppViewModel = viewModel(factory = SingaduAppViewModel.Factory)
 ) {
-    val token = singaduAppViewModel.token.collectAsState().value
+    val loggedInUser = singaduAppViewModel.userState.collectAsState().value
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -123,7 +121,7 @@ fun SingaduApp(
                             singaduAppViewModel.attemptLogin()
                         },
                         onRegisterButtonClicked = { navController.navigate(SingaduScreen.Register.name) },
-                        testText = token
+                        testText = loggedInUser.token
                     )
                 }
 

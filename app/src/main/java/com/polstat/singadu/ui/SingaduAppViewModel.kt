@@ -1,7 +1,5 @@
 package com.polstat.singadu.ui
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -10,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.singadu.SingaduApplication
 import com.polstat.singadu.data.UserPreferencesRepository
+import com.polstat.singadu.data.UserState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -21,17 +20,25 @@ class SingaduAppViewModel(
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel(){
 
-    val token: StateFlow<String> = userPreferencesRepository.token.map { token ->
-        token
+    val userState: StateFlow<UserState> = userPreferencesRepository.user.map { user ->
+        user
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = ""
+        initialValue = UserState(
+            "",
+            "",
+            "",
+            isAdmin = false,
+            isSupervisor = false,
+            isEnumerator = false
+        )
     )
 
     fun attemptLogin() {
+        // TESTING
         viewModelScope.launch {
-            userPreferencesRepository.saveLoggedInUser("abc")
+            userPreferencesRepository.saveToken("adsf")
         }
     }
 
