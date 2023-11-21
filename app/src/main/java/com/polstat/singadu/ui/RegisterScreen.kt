@@ -22,6 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -49,6 +53,12 @@ fun RegisterScreen(
     onBackButtonClicked: () -> Unit = {},
     registerViewModel: RegisterViewModel = viewModel(factory = RegisterViewModel.Factory)
 ) {
+    var showProgressDialog by rememberSaveable { mutableStateOf(false) }
+    
+    if (showProgressDialog) {
+        ProgressDialog(onDismissRequest = { showProgressDialog = false })
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -123,7 +133,15 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.padding(top = 24.dp))
 
                 Button(
-                    onClick = { registerViewModel.register() }
+                    onClick = {
+                        showProgressDialog = true
+                        registerViewModel.register(
+                            onDone = {
+                                // TODO: add success message
+                                showProgressDialog = false
+                            }
+                        )
+                    }
                 ) {
                     Text(text = stringResource(id = R.string.register))
                 }

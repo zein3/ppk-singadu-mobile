@@ -43,17 +43,17 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
         confirmPasswordField = password
     }
 
-    fun register() {
+    fun register(onDone: () -> Unit) {
         if (passwordField != confirmPasswordField) {
+            // TODO: add error message
+            onDone()
             return
         }
         viewModelScope.launch {
-            // TODO: add loading wheel
-
             // TODO: add error handler
             userRepository.register(RegisterForm(nameField, emailField, passwordField))
 
-            // TODO: add success message
+            onDone()
         }
     }
 
