@@ -45,6 +45,23 @@ class LoginViewModel(
                 Log.d(TAG, "accessToken: ${loginResponse.accessToken}")
 
                 userPreferencesRepository.saveToken(loginResponse.accessToken)
+
+                val user = userRepository.getProfile(loginResponse.accessToken)
+                val isAdmin = user.roles?.any { role -> role.name == "ROLE_ADMIN" }
+                val isSupervisor = user.roles?.any { role -> role.name == "ROLE_PENGAWAS" }
+                val isEnumerator = user.roles?.any { role -> role.name == "ROLE_PENCACAH" }
+
+                Log.d(TAG, "name: ${user.name}")
+                Log.d(TAG, "email: ${user.email}")
+                Log.d(TAG, "isAdmin: $isAdmin")
+                Log.d(TAG, "isSupervisor: $isSupervisor")
+                Log.d(TAG, "isEnumerator: $isEnumerator")
+
+                userPreferencesRepository.saveName(user.name)
+                userPreferencesRepository.saveEmail(user.email)
+                userPreferencesRepository.saveIsAdmin(isAdmin ?: false)
+                userPreferencesRepository.saveIsSupervisor(isSupervisor ?: false)
+                userPreferencesRepository.saveIsEnumerator(isEnumerator ?: false)
             } catch(e: HttpException) {
                 when (e.code()) {
                     400 -> Log.d(TAG, "bad input")

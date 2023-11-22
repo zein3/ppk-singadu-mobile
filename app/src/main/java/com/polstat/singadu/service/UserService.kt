@@ -6,6 +6,7 @@ import com.polstat.singadu.model.RegisterForm
 import com.polstat.singadu.model.User
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface UserService {
@@ -17,6 +18,6 @@ interface UserService {
     suspend fun login(@Body form: LoginForm): LoginResponse
 
     @GET("/profile")
-    suspend fun getProfile(): User
+    suspend fun getProfile(@Header("Authorization") token: String): User
 
 }

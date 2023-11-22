@@ -9,11 +9,11 @@ import com.polstat.singadu.service.UserService
 interface UserRepository {
     suspend fun register(user: RegisterForm): User
     suspend fun login(form: LoginForm): LoginResponse
-    suspend fun getProfile(): User
+    suspend fun getProfile(token: String): User
 }
 
 class NetworkUserRepository(private val userService: UserService) : UserRepository {
     override suspend fun register(user: RegisterForm): User = userService.register(user)
     override suspend fun login(form: LoginForm): LoginResponse = userService.login(form)
-    override suspend fun getProfile(): User = userService.getProfile()
+    override suspend fun getProfile(token: String): User = userService.getProfile("Bearer $token")
 }
