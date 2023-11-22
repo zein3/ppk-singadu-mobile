@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,21 +24,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.polstat.singadu.R
 import com.polstat.singadu.ui.theme.SingaduTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onLoginButtonClicked: () -> Unit,
+    onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     onRegisterButtonClicked: () -> Unit = {},
-    testText: String // TESTING
+    loginViewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -56,9 +60,6 @@ fun LoginScreen(
                     modifier = Modifier.size(128.dp)
                 )
 
-                // TESTING
-                Text(text = "token:${testText}")
-
                 Text(
                     text = stringResource(id = R.string.app_name_full),
                     style = TextStyle(
@@ -72,21 +73,30 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.padding(12.dp))
 
                 TextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text(text = stringResource(id = R.string.email)) }
+                    value = loginViewModel.emailField,
+                    onValueChange = { loginViewModel.updateEmail(it) },
+                    placeholder = { Text(text = stringResource(id = R.string.email)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Email
+                    )
                 )
 
-                TextField(
-                    value = "",
-                    onValueChange = {},
+                PasswordTextField(
+                    value = loginViewModel.passwordField,
+                    onValueChange = { loginViewModel.updatePassword(it) },
                     placeholder = { Text(text = stringResource(id = R.string.password)) },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password
+                    )
                 )
 
                 Spacer(modifier = Modifier.padding(top = 24.dp))
 
                 Button(
-                    onClick = onLoginButtonClicked
+                    onClick = { loginViewModel.attemptLogin() }
                 ) {
                     Text(text = stringResource(id = R.string.login))
                 }
@@ -113,8 +123,7 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     SingaduTheme {
         LoginScreen(
-            onLoginButtonClicked = {},
-            testText = ""
+            onLoginSuccess = {}
         )
     }
 }

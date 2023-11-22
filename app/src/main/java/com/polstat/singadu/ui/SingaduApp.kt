@@ -116,12 +116,10 @@ fun SingaduApp(
             ) {
                 composable(route = SingaduScreen.Login.name) {
                     LoginScreen(
-                        onLoginButtonClicked = {
-                            // navController.navigate(SingaduScreen.Home.name)
-                            singaduAppViewModel.attemptLogin()
+                        onLoginSuccess = {
+                            navController.navigate(SingaduScreen.Home.name)
                         },
-                        onRegisterButtonClicked = { navController.navigate(SingaduScreen.Register.name) },
-                        testText = loggedInUser.token
+                        onRegisterButtonClicked = { navController.navigate(SingaduScreen.Register.name) }
                     )
                 }
 
