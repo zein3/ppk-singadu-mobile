@@ -1,9 +1,11 @@
 package com.polstat.singadu.ui
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -38,39 +40,46 @@ class LoginViewModel(
         passwordField = password
     }
 
-    fun attemptLogin() {
-        viewModelScope.launch {
-            try {
-                val loginResponse = userRepository.login(LoginForm(emailField, passwordField))
-                Log.d(TAG, "accessToken: ${loginResponse.accessToken}")
+    suspend fun attemptLogin(): LoginResult {
+        try {
+            val loginResponse = userRepository.login(LoginForm(emailField, passwordField))
+            Log.d(TAG, "accessToken: ${loginResponse.accessToken}")
 
-                userPreferencesRepository.saveToken(loginResponse.accessToken)
+            userPreferencesRepository.saveToken(loginResponse.accessToken)
 
-                val user = userRepository.getProfile(loginResponse.accessToken)
-                val isAdmin = user.roles?.any { role -> role.name == "ROLE_ADMIN" }
-                val isSupervisor = user.roles?.any { role -> role.name == "ROLE_PENGAWAS" }
-                val isEnumerator = user.roles?.any { role -> role.name == "ROLE_PENCACAH" }
+            val user = userRepository.getProfile(loginResponse.accessToken)
+            val isAdmin = user.roles?.any { role -> role.name == "ROLE_ADMIN" }
+            val isSupervisor = user.roles?.any { role -> role.name == "ROLE_PENGAWAS" }
+            val isEnumerator = user.roles?.any { role -> role.name == "ROLE_PENCACAH" }
 
-                Log.d(TAG, "name: ${user.name}")
-                Log.d(TAG, "email: ${user.email}")
-                Log.d(TAG, "isAdmin: $isAdmin")
-                Log.d(TAG, "isSupervisor: $isSupervisor")
-                Log.d(TAG, "isEnumerator: $isEnumerator")
+            Log.d(TAG, "name: ${user.name}")
+            Log.d(TAG, "email: ${user.email}")
+            Log.d(TAG, "isAdmin: $isAdmin")
+            Log.d(TAG, "isSupervisor: $isSupervisor")
+            Log.d(TAG, "isEnumerator: $isEnumerator")
 
-                userPreferencesRepository.saveName(user.name)
-                userPreferencesRepository.saveEmail(user.email)
-                userPreferencesRepository.saveIsAdmin(isAdmin ?: false)
-                userPreferencesRepository.saveIsSupervisor(isSupervisor ?: false)
-                userPreferencesRepository.saveIsEnumerator(isEnumerator ?: false)
-            } catch(e: HttpException) {
-                when (e.code()) {
-                    400 -> Log.d(TAG, "bad input")
-                    401 -> Log.d(TAG, "Wrong email or password")
+            userPreferencesRepository.saveName(user.name)
+            userPreferencesRepository.saveEmail(user.email)
+            userPreferencesRepository.saveIsAdmin(isAdmin ?: false)
+            userPreferencesRepository.saveIsSupervisor(isSupervisor ?: false)
+            userPreferencesRepository.saveIsEnumerator(isEnumerator ?: false)
+        } catch(e: HttpException) {
+            when (e.code()) {
+                400 -> {
+                    Log.d(TAG, "bad input")
+                    return LoginResult.BadInput
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Can't login: (${e.javaClass}) ${e.message}")
+                401 -> {
+                    Log.d(TAG, "Wrong email or password")
+                    return LoginResult.WrongEmailOrPassword
+                }
             }
+        } catch (e: Exception) {
+            Log.e(TAG, "Can't login: (${e.javaClass}) ${e.message}")
+            return LoginResult.Error
         }
+
+        return LoginResult.Success
     }
 
     companion object {
@@ -86,4 +95,11 @@ class LoginViewModel(
         }
     }
 
+}
+
+enum class LoginResult {
+    Success,
+    BadInput,
+    WrongEmailOrPassword,
+    Error
 }

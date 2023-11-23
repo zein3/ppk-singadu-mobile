@@ -34,7 +34,11 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -70,9 +74,37 @@ fun SingaduApp(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
+    var showProgressDialog by rememberSaveable { mutableStateOf(false) }
+    var showMessageDialog by rememberSaveable { mutableStateOf(false) }
+    var messageTitle by rememberSaveable { mutableIntStateOf(R.string.error) }
+    var messageBody by rememberSaveable { mutableIntStateOf(R.string.error) }
+
+    val showSpinner: () -> Unit = {
+        showProgressDialog = true
+    }
+
+    val showMessage: (Int, Int) -> Unit = { newMessageTitle, newMessageBody ->
+        messageTitle = newMessageTitle
+        messageBody = newMessageBody
+        showProgressDialog = false
+        showMessageDialog = true
+    }
+
     val showTopBar = when (navBackStackEntry?.destination?.route) {
         SingaduScreen.Login.name, SingaduScreen.Register.name -> false
         else -> true
+    }
+
+    if (showProgressDialog) {
+        ProgressDialog(onDismissRequest = { showProgressDialog = false })
+    }
+    if (showMessageDialog) {
+        MessageDialog(
+            onDismissRequest = { showMessageDialog = !showMessageDialog },
+            onClose = { showMessageDialog = !showMessageDialog },
+            title = messageTitle,
+            message = messageBody
+        )
     }
 
     ModalNavigationDrawer(
@@ -117,9 +149,12 @@ fun SingaduApp(
                 composable(route = SingaduScreen.Login.name) {
                     LoginScreen(
                         onLoginSuccess = {
+                            showProgressDialog = false
                             navController.navigate(SingaduScreen.Home.name)
                         },
-                        onRegisterButtonClicked = { navController.navigate(SingaduScreen.Register.name) }
+                        onRegisterButtonClicked = { navController.navigate(SingaduScreen.Register.name) },
+                        showSpinner = showSpinner,
+                        showMessage = showMessage
                     )
                 }
 

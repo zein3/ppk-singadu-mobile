@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.polstat.singadu.R
 import com.polstat.singadu.ui.theme.SingaduTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,8 +43,12 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     onRegisterButtonClicked: () -> Unit = {},
-    loginViewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
+    loginViewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory),
+    showSpinner: () -> Unit = {},
+    showMessage: (Int, Int) -> Unit = { _, _ -> }
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -96,7 +102,17 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.padding(top = 24.dp))
 
                 Button(
-                    onClick = { loginViewModel.attemptLogin() }
+                    onClick = {
+                        showSpinner()
+                        coroutineScope.launch {
+                            when(loginViewModel.attemptLogin()) {
+                                LoginResult.Success -> onLoginSuccess()
+                                LoginResult.WrongEmailOrPassword -> showMessage(R.string.error, R.string.email_atau_password_salah)
+                                LoginResult.BadInput -> showMessage(R.string.error, R.string.semua_field_harus_diisi)
+                                else -> showMessage(R.string.error, R.string.error)
+                            }
+                        }
+                    }
                 ) {
                     Text(text = stringResource(id = R.string.login))
                 }

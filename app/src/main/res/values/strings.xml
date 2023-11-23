@@ -24,5 +24,6 @@
     <string name="berhasil_buat_akun">Akun berhasil dibuat!</string>
     <string name="semua_field_harus_diisi">Semua isian harus diisi</string>
     <string name="password_mismatch">Password tidak sama</string>
+    <string name="email_atau_password_salah">Email atau password salah</string>
     <string name="logout">Keluar</string>
 </resources>
