@@ -21,6 +21,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,41 +39,18 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.polstat.singadu.R
 import com.polstat.singadu.ui.theme.SingaduTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     modifier: Modifier = Modifier,
     onBackButtonClicked: () -> Unit = {},
-    registerViewModel: RegisterViewModel = viewModel(factory = RegisterViewModel.Factory)
+    registerViewModel: RegisterViewModel = viewModel(factory = RegisterViewModel.Factory),
+    showSpinner: () -> Unit = {},
+    showMessage: (Int, Int) -> Unit = { _, _ -> }
 ) {
-    var showProgressDialog by rememberSaveable { mutableStateOf(false) }
-    var showMessageDialog by rememberSaveable { mutableStateOf(false) }
-    var registerResult by rememberSaveable { mutableStateOf(RegisterResult.Success) }
-
-    @StringRes val messageTitle = when(registerResult) {
-        RegisterResult.Success -> R.string.sukses
-        else -> R.string.error
-    }
-    @StringRes val messageBody = when(registerResult) {
-        RegisterResult.Success -> R.string.berhasil_buat_akun
-        RegisterResult.EmptyField -> R.string.semua_field_harus_diisi
-        RegisterResult.PasswordMismatch -> R.string.password_mismatch
-        RegisterResult.NetworkError -> R.string.error
-    }
-
-    if (showProgressDialog) {
-        ProgressDialog(onDismissRequest = { showProgressDialog = false })
-    }
-
-    if (showMessageDialog) {
-        MessageDialog(
-            onDismissRequest = { showMessageDialog = !showMessageDialog },
-            onClose = { showMessageDialog = !showMessageDialog },
-            title = messageTitle,
-            message = messageBody
-        )
-    }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -149,14 +127,15 @@ fun RegisterScreen(
 
                 Button(
                     onClick = {
-                        showProgressDialog = true
-                        registerViewModel.register(
-                            setResult = {
-                                registerResult = it
-                                showProgressDialog = false
-                                showMessageDialog = true
+                        showSpinner()
+                        coroutineScope.launch {
+                            when (registerViewModel.register()) {
+                                RegisterResult.Success -> showMessage(R.string.sukses, R.string.berhasil_buat_akun)
+                                RegisterResult.EmptyField -> showMessage(R.string.error, R.string.semua_field_harus_diisi)
+                                RegisterResult.PasswordMismatch -> showMessage(R.string.error, R.string.password_mismatch)
+                                else -> showMessage(R.string.error, R.string.error)
                             }
-                        )
+                        }
                     }
                 ) {
                     Text(text = stringResource(id = R.string.register))

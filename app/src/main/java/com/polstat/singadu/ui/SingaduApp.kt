@@ -160,7 +160,9 @@ fun SingaduApp(
 
                 composable(route = SingaduScreen.Register.name) {
                     RegisterScreen(
-                        onBackButtonClicked = { navController.navigate(SingaduScreen.Login.name) }
+                        onBackButtonClicked = { navController.navigate(SingaduScreen.Login.name) },
+                        showSpinner = showSpinner,
+                        showMessage = showMessage
                     )
                 }
 

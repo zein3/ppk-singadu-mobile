@@ -50,30 +50,21 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
         confirmPasswordField = password
     }
 
-    fun register(
-        setResult: (RegisterResult) -> Unit
-    ) {
+    suspend fun register(): RegisterResult {
         if (nameField == "" || emailField == "" || passwordField == "") {
-            setResult(RegisterResult.EmptyField)
-            return
+            return RegisterResult.EmptyField
         }
         if (passwordField != confirmPasswordField) {
-            setResult(RegisterResult.PasswordMismatch)
-            return
+            return RegisterResult.PasswordMismatch
         }
 
-        viewModelScope.launch {
-            try {
-                userRepository.register(RegisterForm(nameField, emailField, passwordField))
-            } catch (e: Exception) {
-                setResult(RegisterResult.NetworkError)
-                return@launch
-            }
-
-            withContext(Dispatchers.Main) {
-                setResult(RegisterResult.Success)
-            }
+        try {
+            userRepository.register(RegisterForm(nameField, emailField, passwordField))
+        } catch (e: Exception) {
+            return RegisterResult.NetworkError
         }
+
+        return RegisterResult.Success
     }
 
     companion object {
