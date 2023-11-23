@@ -1,22 +1,18 @@
 package com.polstat.singadu.ui
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.singadu.SingaduApplication
 import com.polstat.singadu.data.UserPreferencesRepository
 import com.polstat.singadu.data.UserRepository
 import com.polstat.singadu.model.LoginForm
-import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 private const val TAG = "LoginViewModel"
@@ -76,7 +72,7 @@ class LoginViewModel(
             }
         } catch (e: Exception) {
             Log.e(TAG, "Can't login: (${e.javaClass}) ${e.message}")
-            return LoginResult.Error
+            return LoginResult.NetworkError
         }
 
         return LoginResult.Success
@@ -101,5 +97,5 @@ enum class LoginResult {
     Success,
     BadInput,
     WrongEmailOrPassword,
-    Error
+    NetworkError
 }

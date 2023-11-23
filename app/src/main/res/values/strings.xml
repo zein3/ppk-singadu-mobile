@@ -25,5 +25,6 @@
     <string name="semua_field_harus_diisi">Semua isian harus diisi</string>
     <string name="password_mismatch">Password tidak sama</string>
     <string name="email_atau_password_salah">Email atau password salah</string>
+    <string name="network_error">Tidak dapat terhubung dengan server</string>
     <string name="logout">Keluar</string>
 </resources>

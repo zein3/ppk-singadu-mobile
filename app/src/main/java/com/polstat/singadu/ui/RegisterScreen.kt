@@ -133,7 +133,7 @@ fun RegisterScreen(
                                 RegisterResult.Success -> showMessage(R.string.sukses, R.string.berhasil_buat_akun)
                                 RegisterResult.EmptyField -> showMessage(R.string.error, R.string.semua_field_harus_diisi)
                                 RegisterResult.PasswordMismatch -> showMessage(R.string.error, R.string.password_mismatch)
-                                else -> showMessage(R.string.error, R.string.error)
+                                else -> showMessage(R.string.error, R.string.network_error)
                             }
                         }
                     }

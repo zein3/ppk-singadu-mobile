@@ -109,7 +109,7 @@ fun LoginScreen(
                                 LoginResult.Success -> onLoginSuccess()
                                 LoginResult.WrongEmailOrPassword -> showMessage(R.string.error, R.string.email_atau_password_salah)
                                 LoginResult.BadInput -> showMessage(R.string.error, R.string.semua_field_harus_diisi)
-                                else -> showMessage(R.string.error, R.string.error)
+                                else -> showMessage(R.string.error, R.string.network_error)
                             }
                         }
                     }
