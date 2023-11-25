@@ -119,7 +119,8 @@ fun SingaduApp(
                                 close()
                             }
                         }
-                    }
+                    },
+                    logout = { singaduAppViewModel.logout() }
                 )
             }
         }
@@ -143,7 +144,7 @@ fun SingaduApp(
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = SingaduScreen.Login.name,
+                startDestination = if (loggedInUser.token == "") SingaduScreen.Login.name else SingaduScreen.Home.name,
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(route = SingaduScreen.Login.name) {
@@ -182,6 +183,7 @@ fun SingaduAppBar(
     modifier: Modifier = Modifier,
     onMenuClicked: () -> Unit = {}
 ) {
+
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.smallTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
@@ -223,8 +225,11 @@ fun SingaduAppBar(
 fun SingaduDrawer(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    closeDrawer: () -> Unit = {}
+    closeDrawer: () -> Unit = {},
+    logout: suspend () -> Unit = {}
 ) {
+    val scope = rememberCoroutineScope()
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -272,8 +277,11 @@ fun SingaduDrawer(
             icons = Icons.Filled.ExitToApp,
             text = R.string.logout
         ) {
-            navController.navigate(SingaduScreen.Login.name)
-            closeDrawer()
+            scope.launch {
+                logout()
+                navController.navigate(SingaduScreen.Login.name)
+                closeDrawer()
+            }
         }
     }
 }

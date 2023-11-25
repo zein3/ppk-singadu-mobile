@@ -36,6 +36,15 @@ class SingaduAppViewModel(
         )
     )
 
+    suspend fun logout() {
+        userPreferencesRepository.saveToken("")
+        userPreferencesRepository.saveName("")
+        userPreferencesRepository.saveEmail("")
+        userPreferencesRepository.saveIsAdmin(false)
+        userPreferencesRepository.saveIsSupervisor(false)
+        userPreferencesRepository.saveIsEnumerator(false)
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
