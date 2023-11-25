@@ -22,15 +22,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.polstat.singadu.R
 import com.polstat.singadu.ui.theme.SingaduTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    name: String,
     email: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -52,9 +53,9 @@ fun ProfileScreen(
                 )
 
                 TextField(
-                    value = name,
+                    value = profileViewModel.nameField,
                     singleLine = true,
-                    onValueChange = {},
+                    onValueChange = { profileViewModel.updateNameField(it) },
                     label = {
                         Text(text = stringResource(id = R.string.nama))
                     },
@@ -98,8 +99,8 @@ fun ProfileScreen(
                 )
 
                 PasswordTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = profileViewModel.oldPasswordField,
+                    onValueChange = { profileViewModel.updateOldPasswordField(it) },
                     label = {
                         Text(text = stringResource(id = R.string.password_lama))
                     },
@@ -110,8 +111,8 @@ fun ProfileScreen(
                 )
 
                 PasswordTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = profileViewModel.newPasswordField,
+                    onValueChange = { profileViewModel.updateNewPasswordField(it) },
                     label = {
                         Text(text = stringResource(id = R.string.password_baru))
                     },
@@ -122,8 +123,8 @@ fun ProfileScreen(
                 )
 
                 PasswordTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = profileViewModel.confirmPasswordField,
+                    onValueChange = { profileViewModel.updateConfirmPasswordField(it) },
                     label = {
                         Text(text = stringResource(id = R.string.konfirmasi_password))
                     },
@@ -149,7 +150,6 @@ fun ProfileScreen(
 fun ProfileScreenPreview() {
     SingaduTheme {
         ProfileScreen(
-            name = "Testing",
             email = "Testing@gmail.com"
         )
     }

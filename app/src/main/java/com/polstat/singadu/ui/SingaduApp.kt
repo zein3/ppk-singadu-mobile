@@ -173,7 +173,6 @@ fun SingaduApp(
 
                 composable(route = SingaduScreen.Profile.name) {
                     ProfileScreen(
-                        name = loggedInUser.name,
                         email = loggedInUser.email
                     )
                 }
