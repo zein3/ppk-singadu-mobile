@@ -1,5 +1,6 @@
 package com.polstat.singadu.ui
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,15 +13,18 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.singadu.SingaduApplication
 import com.polstat.singadu.data.UserPreferencesRepository
 import com.polstat.singadu.data.UserRepository
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import com.polstat.singadu.model.User
 import kotlinx.coroutines.launch
+
+private const val TAG = "ProfileViewModel"
 
 class ProfileViewModel(
     private val userPreferencesRepository: UserPreferencesRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
+
+    private lateinit var token: String
+    private lateinit var email: String
 
     var nameField by mutableStateOf("")
         private set
@@ -35,7 +39,13 @@ class ProfileViewModel(
         private set
 
     init {
-        // TODO: atur nameField
+        viewModelScope.launch {
+            userPreferencesRepository.user.collect { user ->
+                token = user.token
+                nameField = user.name
+                email = user.email
+            }
+        }
     }
 
     fun updateNameField(name: String) {
@@ -54,6 +64,29 @@ class ProfileViewModel(
         confirmPasswordField = password
     }
 
+    suspend fun updateProfile(): UpdateProfileResult {
+        try {
+            userRepository.updateProfile(
+                token = token,
+                user = User(
+                    id = null,
+                    name = nameField,
+                    email = email,
+                    password = "password ga dicek",
+                    roles = null,
+                    supervisor = null
+                )
+            )
+
+            userPreferencesRepository.saveName(nameField)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            return UpdateProfileResult.Error
+        }
+
+        return UpdateProfileResult.Success
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -65,4 +98,9 @@ class ProfileViewModel(
             }
         }
     }
+}
+
+enum class UpdateProfileResult {
+    Success,
+    Error
 }

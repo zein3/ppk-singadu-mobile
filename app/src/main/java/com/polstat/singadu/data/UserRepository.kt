@@ -10,10 +10,12 @@ interface UserRepository {
     suspend fun register(user: RegisterForm): Unit
     suspend fun login(form: LoginForm): LoginResponse
     suspend fun getProfile(token: String): User
+    suspend fun updateProfile(token: String, user: User): User
 }
 
 class NetworkUserRepository(private val userService: UserService) : UserRepository {
     override suspend fun register(user: RegisterForm): Unit = userService.register(user)
     override suspend fun login(form: LoginForm): LoginResponse = userService.login(form)
     override suspend fun getProfile(token: String): User = userService.getProfile("Bearer $token")
+    override suspend fun updateProfile(token: String, user: User): User = userService.updateProfile("Bearer $token", user)
 }

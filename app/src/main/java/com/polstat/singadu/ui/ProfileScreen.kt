@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,14 +26,19 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.polstat.singadu.R
 import com.polstat.singadu.ui.theme.SingaduTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     email: String,
     modifier: Modifier = Modifier,
-    profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
+    profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory),
+    showMessage: (Int, Int) -> Unit = { _, _ -> },
+    showSpinner: () -> Unit = {}
 ) {
+    val scope = rememberCoroutineScope()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -77,7 +83,16 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.padding(8.dp))
 
                 Button(
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        showSpinner()
+
+                        scope.launch {
+                            when (profileViewModel.updateProfile()) {
+                                UpdateProfileResult.Success -> showMessage(R.string.sukses, R.string.berhasil_ubah_profil)
+                                UpdateProfileResult.Error -> showMessage(R.string.error, R.string.network_error)
+                            }
+                        }
+                    }
                 ) {
                     Text(text = stringResource(id = R.string.ubah_profil))
                 }
@@ -142,6 +157,8 @@ fun ProfileScreen(
             }
         }
         Spacer(modifier = Modifier.padding(24.dp))
+
+        // TODO: tambahkan fitur hapus akun
     }
 }
 

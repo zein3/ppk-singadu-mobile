@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.singadu.SingaduApplication
 import com.polstat.singadu.data.UserPreferencesRepository
-import com.polstat.singadu.data.UserRepository
 import com.polstat.singadu.data.UserState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 
 
 class SingaduAppViewModel(
-    private val userPreferencesRepository: UserPreferencesRepository,
-    private val userRepository: UserRepository
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel(){
 
     val userState: StateFlow<UserState> = userPreferencesRepository.user.map { user ->
@@ -50,8 +48,7 @@ class SingaduAppViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as SingaduApplication)
                 SingaduAppViewModel(
-                    userPreferencesRepository = application.userPreferenceRepository,
-                    userRepository = application.container.userRepository
+                    userPreferencesRepository = application.userPreferenceRepository
                 )
             }
         }

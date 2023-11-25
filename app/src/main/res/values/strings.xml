@@ -31,5 +31,6 @@
     <string name="ubah_password">Ubah Password</string>
     <string name="password_baru">Password Baru</string>
     <string name="password_lama">Password Lama</string>
+    <string name="berhasil_ubah_profil">Berhasil mengubah profil</string>
     <string name="logout">Keluar</string>
 </resources>

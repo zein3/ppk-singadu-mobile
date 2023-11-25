@@ -8,6 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface UserService {
 
@@ -19,5 +20,8 @@ interface UserService {
 
     @GET("/profile")
     suspend fun getProfile(@Header("Authorization") token: String): User
+
+    @PUT("/profile")
+    suspend fun updateProfile(@Header("Authorization") token: String, @Body user: User): User
 
 }
