@@ -5,7 +5,6 @@ package com.polstat.singadu.ui
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,7 +17,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -41,8 +39,10 @@ import com.polstat.singadu.R
 fun PasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: @Composable () -> Unit,
-    keyboardOptions: KeyboardOptions
+    keyboardOptions: KeyboardOptions,
+    modifier: Modifier = Modifier,
+    placeholder: @Composable (() -> Unit)? = null,
+    label: @Composable (() -> Unit)? = null
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -50,9 +50,11 @@ fun PasswordTextField(
         value = value,
         onValueChange = onValueChange,
         placeholder = placeholder,
+        label = label,
         singleLine = true,
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = keyboardOptions,
+        modifier = modifier,
         trailingIcon = {
             val image = if (passwordVisible) {
                 Icons.Filled.Visibility

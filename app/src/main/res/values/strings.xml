@@ -16,6 +16,7 @@
     <string name="menu_manajemen_user">Manajemen User</string>
     <string name="menu_manajemen_jenis_masalah">Manajemen Jenis Masalah</string>
     <string name="menu_pengaturan">Pengaturan</string>
+    <string name="menu_edit_profil">Ubah Profil</string>
     <string name="hide_password">Sembunyikan password</string>
     <string name="show_password">Perlihatkan password</string>
     <string name="tutup">Tutup</string>
@@ -26,5 +27,9 @@
     <string name="password_mismatch">Password tidak sama</string>
     <string name="email_atau_password_salah">Email atau password salah</string>
     <string name="network_error">Tidak dapat terhubung dengan server</string>
+    <string name="ubah_profil">Ubah Profil</string>
+    <string name="ubah_password">Ubah Password</string>
+    <string name="password_baru">Password Baru</string>
+    <string name="password_lama">Password Lama</string>
     <string name="logout">Keluar</string>
 </resources>

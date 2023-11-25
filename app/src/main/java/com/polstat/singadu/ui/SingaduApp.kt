@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -59,7 +58,8 @@ import kotlinx.coroutines.launch
 enum class SingaduScreen {
     Login,
     Register,
-    Home
+    Home,
+    Profile
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -170,6 +170,13 @@ fun SingaduApp(
                 composable(route = SingaduScreen.Home.name) {
                     HomeScreen()
                 }
+
+                composable(route = SingaduScreen.Profile.name) {
+                    ProfileScreen(
+                        name = loggedInUser.name,
+                        email = loggedInUser.email
+                    )
+                }
             }
         }
 
@@ -253,6 +260,7 @@ fun SingaduDrawer(
             Icons.Filled.Home,
             text = R.string.menu_beranda
         ) {
+            navController.navigate(SingaduScreen.Home.name)
             closeDrawer()
         }
         DrawerNavigationItem(
@@ -268,9 +276,10 @@ fun SingaduDrawer(
             closeDrawer()
         }
         DrawerNavigationItem(
-            Icons.Filled.Settings,
-            text = R.string.menu_pengaturan
+            icons = Icons.Filled.Face,
+            text = R.string.menu_edit_profil
         ) {
+            navController.navigate(SingaduScreen.Profile.name)
             closeDrawer()
         }
         DrawerNavigationItem(
