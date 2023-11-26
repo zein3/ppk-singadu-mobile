@@ -34,5 +34,9 @@
     <string name="berhasil_ubah_profil">Berhasil mengubah profil</string>
     <string name="berhasil_ubah_password">Berhasil mengubah password</string>
     <string name="password_salah">Password salah</string>
+    <string name="ya">Ya</string>
+    <string name="tidak">Tidak</string>
+    <string name="hapus_akun">Hapus akun</string>
+    <string name="konfirmasi_hapus_akun">Apakah anda yakin ingin menghapus akun anda?</string>
     <string name="logout">Keluar</string>
 </resources>

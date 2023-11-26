@@ -39,6 +39,9 @@ fun ProfileScreen(
 ) {
     val scope = rememberCoroutineScope()
 
+    // TODO
+    // ConfirmDialog(onConfirmRequest = { /*TODO*/ }, onDismissRequest = { /*TODO*/ }, message = R.string.konfirmasi_hapus_akun)
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
