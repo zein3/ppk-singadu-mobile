@@ -59,8 +59,8 @@ fun LoginScreen(
                 verticalArrangement = Arrangement.Center,
                 modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 16.dp)
             ) {
-                Image(painter = painterResource(
-                    id = R.drawable.bps),
+                Image(
+                    painter = painterResource(id = R.drawable.bps),
                     contentDescription = stringResource(id = R.string.logo_bps),
                     modifier = Modifier.size(128.dp)
                 )
