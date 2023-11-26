@@ -1,5 +1,6 @@
 package com.polstat.singadu.data
 
+import com.polstat.singadu.model.ChangePasswordForm
 import com.polstat.singadu.model.LoginForm
 import com.polstat.singadu.model.LoginResponse
 import com.polstat.singadu.model.RegisterForm
@@ -11,6 +12,7 @@ interface UserRepository {
     suspend fun login(form: LoginForm): LoginResponse
     suspend fun getProfile(token: String): User
     suspend fun updateProfile(token: String, user: User): User
+    suspend fun updatePassword(token: String, form: ChangePasswordForm): User
 }
 
 class NetworkUserRepository(private val userService: UserService) : UserRepository {
@@ -18,4 +20,5 @@ class NetworkUserRepository(private val userService: UserService) : UserReposito
     override suspend fun login(form: LoginForm): LoginResponse = userService.login(form)
     override suspend fun getProfile(token: String): User = userService.getProfile("Bearer $token")
     override suspend fun updateProfile(token: String, user: User): User = userService.updateProfile("Bearer $token", user)
+    override suspend fun updatePassword(token: String, form: ChangePasswordForm): User = userService.updatePassword("Bearer $token", form)
 }

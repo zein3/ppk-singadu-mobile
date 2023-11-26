@@ -13,8 +13,10 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.singadu.SingaduApplication
 import com.polstat.singadu.data.UserPreferencesRepository
 import com.polstat.singadu.data.UserRepository
+import com.polstat.singadu.model.ChangePasswordForm
 import com.polstat.singadu.model.User
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 private const val TAG = "ProfileViewModel"
 
@@ -87,6 +89,32 @@ class ProfileViewModel(
         return UpdateProfileResult.Success
     }
 
+    suspend fun updatePassword(): UpdatePasswordResult {
+        if (newPasswordField != confirmPasswordField) {
+            return UpdatePasswordResult.Mismatch
+        }
+
+        try {
+            userRepository.updatePassword(
+                token,
+                ChangePasswordForm(
+                    oldPassword = oldPasswordField,
+                    newPassword = newPasswordField
+                )
+            )
+        } catch (e: HttpException) {
+            return when (e.code()) {
+                401 -> UpdatePasswordResult.WrongPassword
+                else -> UpdatePasswordResult.Error
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            return UpdatePasswordResult.Error
+        }
+
+        return UpdatePasswordResult.Success
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -102,5 +130,12 @@ class ProfileViewModel(
 
 enum class UpdateProfileResult {
     Success,
+    Error
+}
+
+enum class UpdatePasswordResult {
+    Success,
+    WrongPassword,
+    Mismatch,
     Error
 }

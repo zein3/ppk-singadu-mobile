@@ -1,5 +1,6 @@
 package com.polstat.singadu.service
 
+import com.polstat.singadu.model.ChangePasswordForm
 import com.polstat.singadu.model.LoginForm
 import com.polstat.singadu.model.LoginResponse
 import com.polstat.singadu.model.RegisterForm
@@ -23,5 +24,8 @@ interface UserService {
 
     @PUT("/profile")
     suspend fun updateProfile(@Header("Authorization") token: String, @Body user: User): User
+
+    @PUT("/profile/password")
+    suspend fun updatePassword(@Header("Authorization") token: String, @Body form: ChangePasswordForm): User
 
 }

@@ -151,7 +151,18 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.padding(8.dp))
 
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = {
+                    showSpinner()
+
+                    scope.launch {
+                        when (profileViewModel.updatePassword()) {
+                            UpdatePasswordResult.Success -> showMessage(R.string.sukses, R.string.berhasil_ubah_password)
+                            UpdatePasswordResult.WrongPassword -> showMessage(R.string.error, R.string.password_salah)
+                            UpdatePasswordResult.Mismatch -> showMessage(R.string.error, R.string.password_mismatch)
+                            UpdatePasswordResult.Error -> showMessage(R.string.error, R.string.network_error)
+                        }
+                    }
+                }) {
                     Text(text = stringResource(id = R.string.ubah_password))
                 }
             }
