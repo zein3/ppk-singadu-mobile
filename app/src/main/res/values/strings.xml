@@ -38,5 +38,6 @@
     <string name="tidak">Tidak</string>
     <string name="hapus_akun">Hapus akun</string>
     <string name="konfirmasi_hapus_akun">Apakah anda yakin ingin menghapus akun anda?</string>
+    <string name="berhasil_hapus_akun">Akun anda telah dihapus</string>
     <string name="logout">Keluar</string>
 </resources>

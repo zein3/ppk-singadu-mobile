@@ -8,8 +8,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -24,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.polstat.singadu.R
 import com.polstat.singadu.ui.theme.SingaduTheme
 import kotlinx.coroutines.launch
@@ -32,6 +36,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProfileScreen(
     email: String,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory),
     showMessage: (Int, Int) -> Unit = { _, _ -> },
@@ -39,14 +44,33 @@ fun ProfileScreen(
 ) {
     val scope = rememberCoroutineScope()
 
-    // TODO
-    // ConfirmDialog(onConfirmRequest = { /*TODO*/ }, onDismissRequest = { /*TODO*/ }, message = R.string.konfirmasi_hapus_akun)
+    if (profileViewModel.showConfirmDialog) {
+        ConfirmDialog(
+            onConfirmRequest = {
+                profileViewModel.showConfirmDialog = false
+                showSpinner()
+
+                scope.launch {
+                    when (profileViewModel.deleteAccount()) {
+                        DeleteAccountResult.Success -> {
+                            showMessage(R.string.sukses, R.string.berhasil_hapus_akun)
+                            navController.navigate(SingaduScreen.Login.name)
+                        }
+                        else -> showMessage(R.string.error, R.string.network_error)
+                    }
+                }
+            },
+            onDismissRequest = { profileViewModel.showConfirmDialog = false },
+            message = R.string.konfirmasi_hapus_akun
+        )
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
+            .padding(horizontal = 12.dp)
     ) {
         Spacer(modifier = Modifier.padding(24.dp))
         Card {
@@ -170,9 +194,20 @@ fun ProfileScreen(
                 }
             }
         }
-        Spacer(modifier = Modifier.padding(24.dp))
 
-        // TODO: tambahkan fitur hapus akun
+        Spacer(modifier = Modifier.padding(12.dp))
+
+        Button(
+            onClick = { profileViewModel.showConfirmDialog = true },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.error
+            ),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = stringResource(id = R.string.hapus_akun))
+        }
+
+        Spacer(modifier = Modifier.padding(24.dp))
     }
 }
 
@@ -181,7 +216,8 @@ fun ProfileScreen(
 fun ProfileScreenPreview() {
     SingaduTheme {
         ProfileScreen(
-            email = "Testing@gmail.com"
+            email = "Testing@gmail.com",
+            navController = rememberNavController()
         )
     }
 }

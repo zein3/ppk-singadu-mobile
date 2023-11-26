@@ -28,6 +28,8 @@ class ProfileViewModel(
     private lateinit var token: String
     private lateinit var email: String
 
+    var showConfirmDialog by mutableStateOf(false)
+
     var nameField by mutableStateOf("")
         private set
 
@@ -115,6 +117,24 @@ class ProfileViewModel(
         return UpdatePasswordResult.Success
     }
 
+    suspend fun deleteAccount(): DeleteAccountResult {
+        try {
+            userRepository.deleteProfile(token)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            return DeleteAccountResult.Error
+        }
+
+        userPreferencesRepository.saveToken("")
+        userPreferencesRepository.saveName("")
+        userPreferencesRepository.saveEmail("")
+        userPreferencesRepository.saveIsAdmin(false)
+        userPreferencesRepository.saveIsSupervisor(false)
+        userPreferencesRepository.saveIsEnumerator(false)
+
+        return DeleteAccountResult.Success
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -137,5 +157,10 @@ enum class UpdatePasswordResult {
     Success,
     WrongPassword,
     Mismatch,
+    Error
+}
+
+enum class DeleteAccountResult {
+    Success,
     Error
 }

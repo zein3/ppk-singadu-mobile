@@ -157,7 +157,8 @@ fun SingaduApp(
                     ProfileScreen(
                         email = loggedInUser.email,
                         showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) },
-                        showSpinner = { singaduAppViewModel.showSpinner() }
+                        showSpinner = { singaduAppViewModel.showSpinner() },
+                        navController = navController
                     )
                 }
             }

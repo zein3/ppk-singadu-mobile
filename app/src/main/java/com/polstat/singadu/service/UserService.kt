@@ -6,6 +6,7 @@ import com.polstat.singadu.model.LoginResponse
 import com.polstat.singadu.model.RegisterForm
 import com.polstat.singadu.model.User
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -27,5 +28,8 @@ interface UserService {
 
     @PUT("/profile/password")
     suspend fun updatePassword(@Header("Authorization") token: String, @Body form: ChangePasswordForm): User
+
+    @DELETE("/profile")
+    suspend fun deleteProfile(@Header("Authorization") token: String)
 
 }
