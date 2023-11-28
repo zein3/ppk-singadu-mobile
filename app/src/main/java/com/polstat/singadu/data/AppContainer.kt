@@ -1,6 +1,7 @@
 package com.polstat.singadu.data
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.polstat.singadu.service.ProblemTypeService
 import com.polstat.singadu.service.UserService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -8,6 +9,7 @@ import retrofit2.Retrofit
 
 interface AppContainer {
     val userRepository: UserRepository
+    val problemTypeRepository: ProblemTypeRepository
 }
 
 class DefaultAppContainer() : AppContainer {
@@ -16,11 +18,19 @@ class DefaultAppContainer() : AppContainer {
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(baseUrl)
         .build()
-    private val retrofitService: UserService by lazy {
+
+    private val userService: UserService by lazy {
         retrofit.create(UserService::class.java)
+    }
+    private val problemTypeService: ProblemTypeService by lazy {
+        retrofit.create(ProblemTypeService::class.java)
     }
 
     override val userRepository: UserRepository by lazy {
-        NetworkUserRepository(retrofitService)
+        NetworkUserRepository(userService)
+    }
+
+    override val problemTypeRepository: ProblemTypeRepository by lazy {
+        NetworkProblemTypeRepository(problemTypeService)
     }
 }

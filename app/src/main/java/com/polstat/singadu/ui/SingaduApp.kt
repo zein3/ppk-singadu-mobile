@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
@@ -48,6 +49,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.polstat.singadu.R
+import com.polstat.singadu.data.UserState
 import com.polstat.singadu.ui.theme.SingaduTheme
 import kotlinx.coroutines.launch
 
@@ -55,7 +57,8 @@ enum class SingaduScreen {
     Login,
     Register,
     Home,
-    Profile
+    Profile,
+    ProblemTypeManagement
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,6 +96,7 @@ fun SingaduApp(
         drawerContent = {
             ModalDrawerSheet {
                 SingaduDrawer(
+                    user = loggedInUser,
                     navController = navController,
                     closeDrawer = {
                         scope.launch {
@@ -161,6 +165,10 @@ fun SingaduApp(
                         navController = navController
                     )
                 }
+
+                composable(route = SingaduScreen.ProblemTypeManagement.name) {
+                    ProblemTypeManagementScreen()
+                }
             }
         }
 
@@ -214,6 +222,7 @@ fun SingaduAppBar(
 
 @Composable
 fun SingaduDrawer(
+    user: UserState,
     navController: NavHostController,
     modifier: Modifier = Modifier,
     closeDrawer: () -> Unit = {},
@@ -247,18 +256,23 @@ fun SingaduDrawer(
             navController.navigate(SingaduScreen.Home.name)
             closeDrawer()
         }
-        DrawerNavigationItem(
-            Icons.Filled.Face,
-            text = R.string.menu_manajemen_user
-        ) {
-            closeDrawer()
+
+        if (user.isAdmin) {
+            DrawerNavigationItem(
+                icons = Icons.Filled.MailOutline,
+                text = R.string.menu_manajemen_jenis_masalah
+            ) {
+                navController.navigate(SingaduScreen.ProblemTypeManagement.name)
+                closeDrawer()
+            }
+            DrawerNavigationItem(
+                Icons.Filled.Face,
+                text = R.string.menu_manajemen_user
+            ) {
+                closeDrawer()
+            }
         }
-        DrawerNavigationItem(
-            icons = Icons.Filled.MailOutline,
-            text = R.string.menu_manajemen_jenis_masalah
-        ) {
-            closeDrawer()
-        }
+
         DrawerNavigationItem(
             icons = Icons.Filled.Face,
             text = R.string.menu_edit_profil
@@ -300,24 +314,6 @@ fun DrawerNavigationItem(
 
         Text(
             text = stringResource(id = text)
-        )
-    }
-}
-
-@Preview
-@Composable
-fun SingaduAppBarPreview() {
-    SingaduTheme {
-        SingaduAppBar()
-    }
-}
-
-@Preview
-@Composable
-fun SingaduDrawerPreview() {
-    SingaduTheme {
-        SingaduDrawer(
-            navController = rememberNavController()
         )
     }
 }
