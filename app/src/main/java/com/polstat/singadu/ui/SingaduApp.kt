@@ -63,7 +63,8 @@ enum class SingaduScreen {
     Home,
     Profile,
     ProblemTypeManagement,
-    CreateProblemType
+    CreateProblemType,
+    UserManagement
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -207,6 +208,10 @@ fun SingaduApp(
                         navController = navController
                     )
                 }
+
+                composable(route = SingaduScreen.UserManagement.name) {
+                    UserManagementScreen()
+                }
             }
         }
 
@@ -307,6 +312,7 @@ fun SingaduDrawer(
                 Icons.Filled.Face,
                 text = R.string.menu_manajemen_user
             ) {
+                navController.navigate(SingaduScreen.UserManagement.name)
                 closeDrawer()
             }
         }

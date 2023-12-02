@@ -32,4 +32,7 @@ interface UserService {
     @DELETE("/profile")
     suspend fun deleteProfile(@Header("Authorization") token: String)
 
+    @GET("/user")
+    suspend fun getAllUsers(@Header("Authorization") token: String): List<User>
+
 }
