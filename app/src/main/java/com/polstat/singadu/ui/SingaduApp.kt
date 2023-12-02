@@ -22,6 +22,8 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,8 +42,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -58,7 +62,8 @@ enum class SingaduScreen {
     Register,
     Home,
     Profile,
-    ProblemTypeManagement
+    ProblemTypeManagement,
+    CreateProblemType
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,6 +82,14 @@ fun SingaduApp(
     val showTopBar = when (navBackStackEntry?.destination?.route) {
         SingaduScreen.Login.name, SingaduScreen.Register.name -> false
         else -> true
+    }
+    val showFloatingActionButton = when (navBackStackEntry?.destination?.route) {
+        SingaduScreen.ProblemTypeManagement.name -> true
+        else -> false
+    }
+    val floatingActionButtonDestination = when (navBackStackEntry?.destination?.route) {
+        SingaduScreen.ProblemTypeManagement.name -> SingaduScreen.CreateProblemType.name
+        else -> ""
     }
 
     if (uiState.value.showProgressDialog) {
@@ -125,6 +138,20 @@ fun SingaduApp(
                     )
                 }
             },
+            floatingActionButtonPosition = FabPosition.End,
+            floatingActionButton = {
+                if (showFloatingActionButton) {
+                    FloatingActionButton(onClick = {
+                        navController.navigate(floatingActionButtonDestination)
+                    }) {
+                        Text(
+                            text = stringResource(id = R.string.plus),
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 24.sp
+                        )
+                    }
+                }
+            },
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
             NavHost(
@@ -168,6 +195,14 @@ fun SingaduApp(
 
                 composable(route = SingaduScreen.ProblemTypeManagement.name) {
                     ProblemTypeManagementScreen()
+                }
+
+                composable(route = SingaduScreen.CreateProblemType.name) {
+                    CreateProblemTypeScreen(
+                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) },
+                        showSpinner = { singaduAppViewModel.showSpinner() },
+                        navController = navController
+                    )
                 }
             }
         }

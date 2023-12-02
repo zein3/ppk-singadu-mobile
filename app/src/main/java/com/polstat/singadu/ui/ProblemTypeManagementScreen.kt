@@ -1,12 +1,16 @@
 package com.polstat.singadu.ui
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.polstat.singadu.R
 
 @Composable
 fun ProblemTypeManagementScreen(
@@ -31,11 +35,10 @@ private fun ProblemTypeManagementScreenContent(
             Text(text = "Loading")
         }
         is ProblemTypeUiState.Success -> {
-            //val problemTypes = (problemTypeViewModel.problemTypeUiState as ProblemTypeUiState.Success).problemTypes
             val problemTypes = problemTypeUiState.problemTypes
             LazyColumn(modifier = Modifier.fillMaxHeight()) {
                 items(items = problemTypes) { problemType ->
-                    Text(text = problemType.name)
+                    ItemCard(title = problemType.name, description = "")
                 }
             }
         }

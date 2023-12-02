@@ -33,11 +33,17 @@
     <string name="password_lama">Password Lama</string>
     <string name="berhasil_ubah_profil">Berhasil mengubah profil</string>
     <string name="berhasil_ubah_password">Berhasil mengubah password</string>
+    <string name="berhasil_menambah_jenis_masalah">Berhasil menambah jenis masalah</string>
     <string name="password_salah">Password salah</string>
     <string name="ya">Ya</string>
     <string name="tidak">Tidak</string>
     <string name="hapus_akun">Hapus akun</string>
     <string name="konfirmasi_hapus_akun">Apakah anda yakin ingin menghapus akun anda?</string>
     <string name="berhasil_hapus_akun">Akun anda telah dihapus</string>
+    <string name="tambah_item">Tambah item</string>
+    <string name="tambah">Tambah</string>
+    <string name="plus">+</string>
+    <string name="nama_jenis_masalah">Nama Jenis Masalah</string>
+    <string name="jenis_masalah">Jenis Masalah</string>
     <string name="logout">Keluar</string>
 </resources>
