@@ -15,6 +15,7 @@ interface UserRepository {
     suspend fun updatePassword(token: String, form: ChangePasswordForm): User
     suspend fun deleteProfile(token: String)
     suspend fun getAllUsers(token: String): List<User>
+    suspend fun deleteUser(token: String, id: Long)
 }
 
 class NetworkUserRepository(private val userService: UserService) : UserRepository {
@@ -25,4 +26,5 @@ class NetworkUserRepository(private val userService: UserService) : UserReposito
     override suspend fun updatePassword(token: String, form: ChangePasswordForm): User = userService.updatePassword("Bearer $token", form)
     override suspend fun deleteProfile(token: String) = userService.deleteProfile("Bearer $token")
     override suspend fun getAllUsers(token: String) = userService.getAllUsers("Bearer $token")
+    override suspend fun deleteUser(token: String, id: Long) = userService.deleteUser("Bearer $token", id)
 }

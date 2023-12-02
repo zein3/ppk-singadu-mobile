@@ -11,6 +11,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface UserService {
 
@@ -34,5 +35,8 @@ interface UserService {
 
     @GET("/user")
     suspend fun getAllUsers(@Header("Authorization") token: String): List<User>
+
+    @DELETE("/user/{id}")
+    suspend fun deleteUser(@Header("Authorization") token: String, @Path("id") id: Long)
 
 }

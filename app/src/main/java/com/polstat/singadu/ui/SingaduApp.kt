@@ -210,7 +210,10 @@ fun SingaduApp(
                 }
 
                 composable(route = SingaduScreen.UserManagement.name) {
-                    UserManagementScreen()
+                    UserManagementScreen(
+                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) },
+                        showSpinner = { singaduAppViewModel.showSpinner() }
+                    )
                 }
             }
         }

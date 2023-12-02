@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -16,7 +15,6 @@ import com.polstat.singadu.data.UserPreferencesRepository
 import com.polstat.singadu.data.UserRepository
 import com.polstat.singadu.model.User
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 private const val TAG = "UserManagementViewModel"
 
@@ -31,6 +29,7 @@ class UserManagementViewModel(
         private set
     var searchQuery: String by mutableStateOf("")
         private set
+    var selectedUserId: Long by mutableStateOf(0)
 
     init {
         viewModelScope.launch {
@@ -66,6 +65,17 @@ class UserManagementViewModel(
         }
     }
 
+    suspend fun deleteUser(): DeleteUserResult {
+        try {
+            userRepository.deleteUser(token, selectedUserId)
+        } catch (e: Exception) {
+            Log.e(TAG, "exception: ${e.message}")
+            return DeleteUserResult.Error
+        }
+
+        return DeleteUserResult.Success
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -83,4 +93,9 @@ sealed interface UserManagementUiState {
     data class Success(val users: List<User>): UserManagementUiState
     object Error: UserManagementUiState
     object Loading: UserManagementUiState
+}
+
+enum class DeleteUserResult {
+    Success,
+    Error
 }
