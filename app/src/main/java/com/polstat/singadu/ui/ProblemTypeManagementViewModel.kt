@@ -2,6 +2,7 @@ package com.polstat.singadu.ui
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -29,6 +30,8 @@ class ProblemTypeManagementViewModel(
     var problemTypeUiState: ProblemTypeUiState by mutableStateOf(ProblemTypeUiState.Loading)
         private set
 
+    var selectedId: Long by mutableLongStateOf(0)
+
     init {
         viewModelScope.launch {
             userPreferencesRepository.user.collect { user ->
@@ -53,6 +56,17 @@ class ProblemTypeManagementViewModel(
         }
     }
 
+    suspend fun deleteProblemType(): DeleteProblemTypeResult {
+        try {
+            problemTypeRepository.deleteProblemType(token, selectedId)
+        } catch (e: Exception) {
+            Log.e(TAG, "Exception: ${e.message}")
+            return DeleteProblemTypeResult.Error
+        }
+
+        return DeleteProblemTypeResult.Success
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -72,4 +86,9 @@ sealed interface ProblemTypeUiState {
     data class Success(val problemTypes: List<ProblemType>): ProblemTypeUiState
     object Error: ProblemTypeUiState
     object Loading: ProblemTypeUiState
+}
+
+enum class DeleteProblemTypeResult {
+    Success,
+    Error
 }

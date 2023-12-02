@@ -194,7 +194,10 @@ fun SingaduApp(
                 }
 
                 composable(route = SingaduScreen.ProblemTypeManagement.name) {
-                    ProblemTypeManagementScreen()
+                    ProblemTypeManagementScreen(
+                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) },
+                        showSpinner = { singaduAppViewModel.showSpinner() }
+                    )
                 }
 
                 composable(route = SingaduScreen.CreateProblemType.name) {
