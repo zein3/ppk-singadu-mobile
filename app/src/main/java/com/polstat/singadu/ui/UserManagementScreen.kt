@@ -25,6 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.polstat.singadu.R
 import kotlinx.coroutines.launch
 
@@ -34,7 +36,8 @@ fun UserManagementScreen(
     modifier: Modifier = Modifier,
     userManagementViewModel: UserManagementViewModel = viewModel(factory = UserManagementViewModel.Factory),
     showSpinner: () -> Unit = {},
-    showMessage: (Int, Int) -> Unit = { _, _ -> }
+    showMessage: (Int, Int) -> Unit = { _, _ -> },
+    navController: NavHostController = rememberNavController()
 ) {
     val scope = rememberCoroutineScope()
     var showConfirmDialog by rememberSaveable { mutableStateOf(false) }
@@ -87,6 +90,9 @@ fun UserManagementScreen(
             onDeleteClicked = { selectedUserId ->
                 userManagementViewModel.selectedUserId = selectedUserId
                 showConfirmDialog = true
+            },
+            onEditClicked = { userId ->
+                navController.navigate("${SingaduScreen.EditUser.name}/$userId")
             }
         )
     }
@@ -95,7 +101,8 @@ fun UserManagementScreen(
 @Composable
 fun UserList(
     userManagementUiState: UserManagementUiState,
-    onDeleteClicked: (Long) -> Unit = {}
+    onDeleteClicked: (Long) -> Unit = {},
+    onEditClicked: (Long) -> Unit = {}
 ) {
     when(userManagementUiState) {
         is UserManagementUiState.Error -> {
@@ -115,7 +122,8 @@ fun UserList(
                             Column {
                                 DrawerNavigationItem(
                                     icons = Icons.Filled.Edit,
-                                    text = R.string.edit_user
+                                    text = R.string.edit_user,
+                                    onClick = { user.id?.let { onEditClicked(it) } }
                                 )
                                 DrawerNavigationItem(
                                     icons = Icons.Filled.Delete,

@@ -72,6 +72,7 @@ class LoginViewModel(
             }
         } catch (e: Exception) {
             Log.e(TAG, "Can't login: (${e.javaClass}) ${e.message}")
+            Log.e(TAG, e.stackTraceToString())
             return LoginResult.NetworkError
         }
 

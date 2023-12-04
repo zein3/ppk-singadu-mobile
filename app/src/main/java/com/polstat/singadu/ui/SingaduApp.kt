@@ -1,5 +1,6 @@
 package com.polstat.singadu.ui
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -48,10 +49,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.polstat.singadu.R
 import com.polstat.singadu.data.UserState
 import com.polstat.singadu.ui.theme.SingaduTheme
@@ -64,8 +67,11 @@ enum class SingaduScreen {
     Profile,
     ProblemTypeManagement,
     CreateProblemType,
-    UserManagement
+    UserManagement,
+    EditUser
 }
+
+private const val TAG = "SingaduApp"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -212,8 +218,18 @@ fun SingaduApp(
                 composable(route = SingaduScreen.UserManagement.name) {
                     UserManagementScreen(
                         showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) },
-                        showSpinner = { singaduAppViewModel.showSpinner() }
+                        showSpinner = { singaduAppViewModel.showSpinner() },
+                        navController = navController
                     )
+                }
+                
+                composable(
+                    route = "${SingaduScreen.EditUser.name}/{userId}",
+                    arguments = listOf(navArgument("userId") {
+                        type = NavType.LongType
+                    })
+                ) {
+                    EditUserScreen()
                 }
             }
         }
