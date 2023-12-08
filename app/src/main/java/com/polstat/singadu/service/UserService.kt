@@ -39,4 +39,7 @@ interface UserService {
     @DELETE("/user/{id}")
     suspend fun deleteUser(@Header("Authorization") token: String, @Path("id") id: Long)
 
+    @GET("/user/{id}")
+    suspend fun getUserById(@Header("Authorization") token: String, @Path("id") id: Long): User
+
 }

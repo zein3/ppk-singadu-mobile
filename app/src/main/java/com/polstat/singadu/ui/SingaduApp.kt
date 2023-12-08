@@ -229,7 +229,9 @@ fun SingaduApp(
                         type = NavType.LongType
                     })
                 ) {
-                    EditUserScreen()
+                    EditUserScreen(
+                        editUserViewModel = viewModel(factory = EditUserViewModel.Factory)
+                    )
                 }
             }
         }

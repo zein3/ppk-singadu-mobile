@@ -50,5 +50,9 @@
     <string name="berhasil_hapus_jenis_masalah">Berhasil hapus jenis masalah</string>
     <string name="cari">Cari</string>
     <string name="edit_user">Pengaturan pengguna</string>
+    <string name="role_admin">Admin</string>
+    <string name="role_pengawas">PML</string>
+    <string name="role_pencacah">PCL</string>
+    <string name="berhasil_ubah_role">Berhasil mengubah role</string>
     <string name="logout">Keluar</string>
 </resources>
