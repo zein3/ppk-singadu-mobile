@@ -63,6 +63,7 @@ class EditUserViewModel(
                 userRepository.removeRoleFromUser(token, userId, role)
         } catch(e: Exception) {
             Log.e(TAG, "Error: ${e.message}")
+            return UpdateUserRoleResult.Error
         }
         getUserData()
         return UpdateUserRoleResult.Success
