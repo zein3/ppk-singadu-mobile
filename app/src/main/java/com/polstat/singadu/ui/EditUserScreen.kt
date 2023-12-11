@@ -15,20 +15,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.polstat.singadu.R
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditUserScreen(
     editUserViewModel: EditUserViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showSpinner: () -> Unit = {},
+    showMessage: (Int, Int) -> Unit = { _, _ -> }
 ) {
     val userUiState = editUserViewModel.userUiState
+    val scope = rememberCoroutineScope()
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -62,17 +67,41 @@ fun EditUserScreen(
 
             EditUserRoleCheckbox(
                 checked = editUserViewModel.userHasRole("ROLE_ADMIN"),
-                onCheckedChange = {},
+                onCheckedChange = { isAddingRole ->
+                    showSpinner()
+                    scope.launch {
+                        when (editUserViewModel.updateUserRole("ROLE_ADMIN", isAddingRole)) {
+                            UpdateUserRoleResult.Success -> showMessage(R.string.sukses, R.string.berhasil_ubah_role)
+                            UpdateUserRoleResult.Error -> showMessage(R.string.error, R.string.network_error)
+                        }
+                    }
+                },
                 text = stringResource(id = R.string.role_admin)
             )
             EditUserRoleCheckbox(
                 checked = editUserViewModel.userHasRole("ROLE_PENGAWAS"),
-                onCheckedChange = {},
+                onCheckedChange = { isAddingRole ->
+                    showSpinner()
+                    scope.launch {
+                        when (editUserViewModel.updateUserRole("ROLE_PENGAWAS", isAddingRole)) {
+                            UpdateUserRoleResult.Success -> showMessage(R.string.sukses, R.string.berhasil_ubah_role)
+                            UpdateUserRoleResult.Error -> showMessage(R.string.error, R.string.network_error)
+                        }
+                    }
+                },
                 text = stringResource(id = R.string.role_pengawas)
             )
             EditUserRoleCheckbox(
                 checked = editUserViewModel.userHasRole("ROLE_PENCACAH"),
-                onCheckedChange = {},
+                onCheckedChange = {isAddingRole ->
+                    showSpinner()
+                    scope.launch {
+                        when (editUserViewModel.updateUserRole("ROLE_PENCACAH", isAddingRole)) {
+                            UpdateUserRoleResult.Success -> showMessage(R.string.sukses, R.string.berhasil_ubah_role)
+                            UpdateUserRoleResult.Error -> showMessage(R.string.error, R.string.network_error)
+                        }
+                    }
+                },
                 text = stringResource(id = R.string.role_pencacah)
             )
             

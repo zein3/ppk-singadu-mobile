@@ -42,4 +42,10 @@ interface UserService {
     @GET("/user/{id}")
     suspend fun getUserById(@Header("Authorization") token: String, @Path("id") id: Long): User
 
+    @POST("/user/{userId}/role/{role}")
+    suspend fun addRoleToUser(@Header("Authorization") token: String, @Path("userId") userId: Long, @Path("role") role: String)
+
+    @DELETE("/user/{userId}/role/{role}")
+    suspend fun removeRoleFromUser(@Header("Authorization") token: String, @Path("userId") userId: Long, @Path("role") role: String)
+
 }

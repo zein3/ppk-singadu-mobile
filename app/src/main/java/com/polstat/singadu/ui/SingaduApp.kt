@@ -230,7 +230,9 @@ fun SingaduApp(
                     })
                 ) {
                     EditUserScreen(
-                        editUserViewModel = viewModel(factory = EditUserViewModel.Factory)
+                        editUserViewModel = viewModel(factory = EditUserViewModel.Factory),
+                        showSpinner = { singaduAppViewModel.showSpinner() },
+                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) }
                     )
                 }
             }

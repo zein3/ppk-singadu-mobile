@@ -17,6 +17,8 @@ interface UserRepository {
     suspend fun getAllUsers(token: String): List<User>
     suspend fun deleteUser(token: String, id: Long)
     suspend fun getUserById(token: String, id: Long): User
+    suspend fun addRoleToUser(token: String, userId: Long, role: String)
+    suspend fun removeRoleFromUser(token: String, userId: Long, role: String)
 }
 
 class NetworkUserRepository(private val userService: UserService) : UserRepository {
@@ -29,4 +31,6 @@ class NetworkUserRepository(private val userService: UserService) : UserReposito
     override suspend fun getAllUsers(token: String) = userService.getAllUsers("Bearer $token")
     override suspend fun deleteUser(token: String, id: Long) = userService.deleteUser("Bearer $token", id)
     override suspend fun getUserById(token: String, id: Long) = userService.getUserById("Bearer $token", id)
+    override suspend fun addRoleToUser(token: String, userId: Long, role: String) = userService.addRoleToUser("Bearer $token", userId, role)
+    override suspend fun removeRoleFromUser(token: String, userId: Long, role: String) = userService.removeRoleFromUser("Bearer $token", userId, role)
 }

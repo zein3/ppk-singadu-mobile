@@ -30,26 +30,42 @@ class EditUserViewModel(
         private set
 
     private lateinit var token: String
-    private val itemId: Long = checkNotNull(savedStateHandle["userId"])
+    private val userId: Long = checkNotNull(savedStateHandle["userId"])
 
     init {
+        getUserData()
+    }
+
+    private fun getUserData() {
         viewModelScope.launch {
             userPreferencesRepository.user.collect { user ->
                 token = user.token
                 try {
-                    userUiState = userRepository.getUserById(token, itemId)
+                    userUiState = userRepository.getUserById(token, userId)
                 } catch (e: Exception) {
                     Log.e(TAG, "Exception: ${e.message}")
                     Log.e(TAG, e.stackTraceToString())
                 }
             }
-
         }
     }
 
     fun userHasRole(roleName: String): Boolean {
         val roles: List<Role> = userUiState.roles ?: listOf()
         return roles.any { role -> role.name == roleName }
+    }
+
+    suspend fun updateUserRole(role: String, isAddingRole: Boolean): UpdateUserRoleResult {
+        try {
+            if (isAddingRole)
+                userRepository.addRoleToUser(token, userId, role)
+            else
+                userRepository.removeRoleFromUser(token, userId, role)
+        } catch(e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+        }
+        getUserData()
+        return UpdateUserRoleResult.Success
     }
 
     companion object {
@@ -65,4 +81,9 @@ class EditUserViewModel(
         }
     }
 
+}
+
+enum class UpdateUserRoleResult {
+    Success,
+    Error
 }
