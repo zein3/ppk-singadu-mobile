@@ -1,5 +1,7 @@
 package com.polstat.singadu.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +18,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -26,13 +29,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.polstat.singadu.R
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateReportScreen(
-    createReportViewModel: CreateReportViewModel
+    createReportViewModel: CreateReportViewModel,
+    showSpinner: () -> Unit,
+    showMessage: (Int, Int) -> Unit
 ) {
     var jenisMasalahExpanded by rememberSaveable { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -103,11 +110,22 @@ fun CreateReportScreen(
                         }
                     }
                 }
+
+                // TODO: tambah input date
                 
                 Spacer(modifier = Modifier.padding(10.dp))
                 
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        showSpinner()
+                        scope.launch {
+                            when (createReportViewModel.createReport()) {
+                                CreateReportResult.Success -> showMessage(R.string.sukses, R.string.berhasil_buat_laporan)
+                                CreateReportResult.BadInput -> showMessage(R.string.error, R.string.semua_field_harus_diisi)
+                                CreateReportResult.Error -> showMessage(R.string.error, R.string.network_error)
+                            }
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = stringResource(id = R.string.buat_laporan))

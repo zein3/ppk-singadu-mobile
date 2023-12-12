@@ -236,7 +236,9 @@ fun SingaduApp(
 
                 composable(route = SingaduScreen.CreateReport.name) {
                     CreateReportScreen(
-                        createReportViewModel = viewModel(factory = CreateReportViewModel.Factory)
+                        createReportViewModel = viewModel(factory = CreateReportViewModel.Factory),
+                        showSpinner = { singaduAppViewModel.showSpinner() },
+                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) }
                     )
                 }
             }

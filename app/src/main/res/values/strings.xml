@@ -58,5 +58,6 @@
     <string name="form_laporan">Formulir Pembuatan Laporan</string>
     <string name="deskripsi_masalah">Deskripsi Masalah</string>
     <string name="buat_laporan">Buat Laporan</string>
+    <string name="berhasil_buat_laporan">Berhasil membuat laporan</string>
     <string name="logout">Keluar</string>
 </resources>
