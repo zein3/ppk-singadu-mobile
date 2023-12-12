@@ -64,7 +64,8 @@ enum class SingaduScreen {
     ProblemTypeManagement,
     CreateProblemType,
     UserManagement,
-    EditUser
+    EditUser,
+    CreateReport
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,10 +87,12 @@ fun SingaduApp(
     }
     val showFloatingActionButton = when (navBackStackEntry?.destination?.route) {
         SingaduScreen.ProblemTypeManagement.name -> true
+        SingaduScreen.Home.name -> loggedInUser.isEnumerator
         else -> false
     }
     val floatingActionButtonDestination = when (navBackStackEntry?.destination?.route) {
         SingaduScreen.ProblemTypeManagement.name -> SingaduScreen.CreateProblemType.name
+        SingaduScreen.Home.name -> SingaduScreen.CreateReport.name
         else -> ""
     }
 
@@ -163,7 +166,6 @@ fun SingaduApp(
                 composable(route = SingaduScreen.Login.name) {
                     LoginScreen(
                         onLoginSuccess = {
-                            // showProgressDialog = false
                             singaduAppViewModel.dismissSpinner()
                             navController.navigate(SingaduScreen.Home.name)
                         },
@@ -182,7 +184,9 @@ fun SingaduApp(
                 }
 
                 composable(route = SingaduScreen.Home.name) {
-                    HomeScreen()
+                    HomeScreen(
+                        homeViewModel = viewModel(factory = HomeViewModel.Factory)
+                    )
                 }
 
                 composable(route = SingaduScreen.Profile.name) {
@@ -227,6 +231,12 @@ fun SingaduApp(
                         editUserViewModel = viewModel(factory = EditUserViewModel.Factory),
                         showSpinner = { singaduAppViewModel.showSpinner() },
                         showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) }
+                    )
+                }
+
+                composable(route = SingaduScreen.CreateReport.name) {
+                    CreateReportScreen(
+                        createReportViewModel = viewModel(factory = CreateReportViewModel.Factory)
                     )
                 }
             }
