@@ -38,6 +38,8 @@ class CreateReportViewModel(
     var allProblemTypes: List<ProblemType> = listOf()
     var deskripsi by mutableStateOf("")
         private set
+    var reportedDate by mutableStateOf(LocalDate.now().toString())
+        private set
     var selectedProblemTypeId by mutableLongStateOf(0)
         private set
     var selectedProblemTypeName by mutableStateOf("")
@@ -56,6 +58,10 @@ class CreateReportViewModel(
         deskripsi = newDeskripsi
     }
 
+    fun updateReportedDate(newDate: String) {
+        reportedDate = newDate
+    }
+
     fun setSelectedProblemType(ptype: ProblemType) {
         selectedProblemTypeId = ptype.id ?: 0
         selectedProblemTypeName = ptype.name
@@ -69,7 +75,7 @@ class CreateReportViewModel(
         try {
             val report = CreateReportForm(
                 description = deskripsi,
-                reportedDate = LocalDateTime.now().toString(),
+                reportedDate = reportedDate,
                 solved = false,
                 problemType = ProblemType(
                     id = selectedProblemTypeId,

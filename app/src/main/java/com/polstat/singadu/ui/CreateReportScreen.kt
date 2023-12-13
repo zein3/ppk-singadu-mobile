@@ -1,11 +1,14 @@
 package com.polstat.singadu.ui
 
+import android.app.DatePickerDialog
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -23,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -30,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.polstat.singadu.R
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,7 +117,11 @@ fun CreateReportScreen(
                     }
                 }
 
-                // TODO: tambah input date
+                DatePicker(
+                    label = stringResource(id = R.string.tanggal_kejadian),
+                    value = createReportViewModel.reportedDate,
+                    onValueChange = { createReportViewModel.updateReportedDate(it) }
+                )
                 
                 Spacer(modifier = Modifier.padding(10.dp))
                 
@@ -133,4 +143,39 @@ fun CreateReportScreen(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePicker(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    pattern: String = "yyyy-MM-dd",
+) {
+    val formatter = DateTimeFormatter.ofPattern(pattern)
+    val date = if (value.isNotBlank()) LocalDate.parse(value, formatter) else LocalDate.now()
+    val dialog = DatePickerDialog(
+        LocalContext.current,
+        { _, year, month, dayOfMonth ->
+            onValueChange(LocalDate.of(year, month + 1, dayOfMonth).toString())
+        },
+        date.year,
+        date.monthValue - 1,
+        date.dayOfMonth,
+    )
+
+    TextField(
+        label = {
+            Text(text = label)
+        },
+        value = value,
+        onValueChange = {},
+        enabled = false,
+        modifier = Modifier.clickable { dialog.show() }.fillMaxWidth(),
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions
+    )
 }
