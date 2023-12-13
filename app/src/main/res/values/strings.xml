@@ -60,5 +60,6 @@
     <string name="buat_laporan">Buat Laporan</string>
     <string name="berhasil_buat_laporan">Berhasil membuat laporan</string>
     <string name="tanggal_kejadian">Tanggal Kejadian</string>
+    <string name="supervisor">Supervisor/Pengawas</string>
     <string name="logout">Keluar</string>
 </resources>

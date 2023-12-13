@@ -7,11 +7,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,6 +35,7 @@ fun EditUserScreen(
     showMessage: (Int, Int) -> Unit = { _, _ -> }
 ) {
     val userUiState = editUserViewModel.userUiState
+    var supervisorDropdownExpanded by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     Column(
@@ -96,6 +104,46 @@ fun EditUserScreen(
             },
             text = stringResource(id = R.string.role_pencacah)
         )
+
+        if (editUserViewModel.userHasRole("ROLE_PENCACAH")) {
+            ExposedDropdownMenuBox(
+                expanded = supervisorDropdownExpanded,
+                onExpandedChange = { supervisorDropdownExpanded = !supervisorDropdownExpanded },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextField(
+                    value = editUserViewModel.supervisorName,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = supervisorDropdownExpanded)
+                    },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(),
+                    label = {
+                        Text(text = stringResource(id = R.string.supervisor))
+                    }
+                )
+
+                ExposedDropdownMenu(
+                    expanded = supervisorDropdownExpanded,
+                    onDismissRequest = { supervisorDropdownExpanded = false },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    editUserViewModel.allSupervisors.forEach { supervisor ->
+                        DropdownMenuItem(
+                            text = { Text(text = supervisor.name) },
+                            onClick = {
+                                editUserViewModel.setSelectedSupervisor(supervisor)
+                                supervisorDropdownExpanded = false
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 

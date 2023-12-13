@@ -2,6 +2,7 @@ package com.polstat.singadu.ui
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -17,6 +18,7 @@ import com.polstat.singadu.data.UserPreferencesRepository
 import com.polstat.singadu.data.UserRepository
 import com.polstat.singadu.model.Role
 import com.polstat.singadu.model.User
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 private const val TAG = "EditUserViewModel"
@@ -31,8 +33,14 @@ class EditUserViewModel(
 
     private lateinit var token: String
     private val userId: Long = checkNotNull(savedStateHandle["userId"])
+    var allSupervisors: List<User> = listOf()
+    var supervisorId by mutableLongStateOf(0L)
+        private set
+    var supervisorName by mutableStateOf("")
+        private set
 
     init {
+        getAllSupervisors()
         getUserData()
     }
 
@@ -42,6 +50,8 @@ class EditUserViewModel(
                 token = user.token
                 try {
                     userUiState = userRepository.getUserById(token, userId)
+                    supervisorId = userUiState.supervisor?.id ?: 0L
+                    supervisorName = userUiState.supervisor?.name ?: ""
                 } catch (e: Exception) {
                     Log.e(TAG, "Exception: ${e.message}")
                     Log.e(TAG, e.stackTraceToString())
@@ -50,9 +60,25 @@ class EditUserViewModel(
         }
     }
 
+    private fun getAllSupervisors() {
+        viewModelScope.launch {
+            userPreferencesRepository.user.collect { user ->
+                val users = userRepository.getAllUsers(user.token)
+                allSupervisors = users.filter { it.roles?.any { role -> role.name == "ROLE_PENGAWAS" } == true }
+                Log.d(TAG, "users: $users")
+                Log.d(TAG, "supervisor: $allSupervisors")
+            }
+        }
+    }
+
     fun userHasRole(roleName: String): Boolean {
         val roles: List<Role> = userUiState.roles ?: listOf()
         return roles.any { role -> role.name == roleName }
+    }
+
+    fun setSelectedSupervisor(user: User) {
+        supervisorId = user.id ?: 0
+        supervisorName = user.name
     }
 
     suspend fun updateUserRole(role: String, isAddingRole: Boolean): UpdateUserRoleResult {
