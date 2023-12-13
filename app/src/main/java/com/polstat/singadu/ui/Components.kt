@@ -1,12 +1,15 @@
 package com.polstat.singadu.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
@@ -15,6 +18,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -74,6 +78,77 @@ fun ItemCard(
                 Text(
                     text = description,
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun ReportItemCard(
+    description: String,
+    problemType: String,
+    reporter: String,
+    status: String,
+    modifier: Modifier = Modifier,
+    options: @Composable (() -> Unit) = {}
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    Box(modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)) {
+        Card(
+            modifier = modifier.fillMaxWidth()
+        ) {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "$problemType - $reporter",
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    IconButton(
+                        onClick = { expanded = true },
+                        modifier = Modifier.size(25.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = null
+                        )
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            options()
+                        }
+                    }
+                }
+                
+                Spacer(modifier = Modifier.padding(5.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = description,
+                    )
+
+                    Text(
+                        text = status,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                shape = RoundedCornerShape(10.dp)
+                            )
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                }
             }
         }
     }

@@ -62,5 +62,7 @@
     <string name="tanggal_kejadian">Tanggal Kejadian</string>
     <string name="supervisor">Supervisor/Pengawas</string>
     <string name="berhasil_update_supervisor">Berhasil mengatur pengawas</string>
+    <string name="selesai">Selesai</string>
+    <string name="belum_selesai">Belum Selesai</string>
     <string name="logout">Keluar</string>
 </resources>

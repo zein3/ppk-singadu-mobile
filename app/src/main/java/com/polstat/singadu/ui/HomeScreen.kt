@@ -73,9 +73,11 @@ fun ReportsList(
             val reports = reportsUiState.reports
             LazyColumn(modifier = Modifier.fillMaxHeight()) {
                 items(items = reports) { report ->
-                    ItemCard(
-                        title = "${report.problemType.name} - ${report.reporter!!.name}",
-                        description = report.description
+                    ReportItemCard(
+                        description = report.description,
+                        problemType = report.problemType.name,
+                        reporter = report.reporter!!.name,
+                        status = if (report.solved) stringResource(id = R.string.selesai) else stringResource(id = R.string.belum_selesai)
                     )
                 }
             }
