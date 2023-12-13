@@ -54,4 +54,7 @@ interface UserService {
     @DELETE("/user/{userId}/supervisor")
     suspend fun dismissSupervisor(@Header("Authorization") token: String, @Path("userId") userId: Long)
 
+    @GET("/user/{userId}/supervisee")
+    suspend fun getAllSupervisee(@Header("Authorization") token: String, @Path("userId") userId: Long): List<User>
+
 }

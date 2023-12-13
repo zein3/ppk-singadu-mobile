@@ -53,6 +53,12 @@ class HomeViewModel(
                 reports = reportRepository.getAllReports(userState.token)
             } else if (userState.isEnumerator) {
                 reports = reportRepository.getReportsByUser(userState.token, user.id!!)
+            } else if (userState.isSupervisor) {
+                reports = listOf()
+                val allSupervisee = userRepository.getAllSupervisee(userState.token, user.id!!)
+                for (supervisee in allSupervisee) {
+                    reports += reportRepository.getReportsByUser(userState.token, supervisee.id!!)
+                }
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error: ${e.message}")
