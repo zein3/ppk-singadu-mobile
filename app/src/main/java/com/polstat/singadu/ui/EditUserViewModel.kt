@@ -2,7 +2,6 @@ package com.polstat.singadu.ui
 
 import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -18,7 +17,6 @@ import com.polstat.singadu.data.UserPreferencesRepository
 import com.polstat.singadu.data.UserRepository
 import com.polstat.singadu.model.Role
 import com.polstat.singadu.model.User
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 private const val TAG = "EditUserViewModel"
