@@ -48,4 +48,10 @@ interface UserService {
     @DELETE("/user/{userId}/role/{role}")
     suspend fun removeRoleFromUser(@Header("Authorization") token: String, @Path("userId") userId: Long, @Path("role") role: String)
 
+    @POST("/user/{userId}/supervisor/{supervisorId}")
+    suspend fun assignSupervisor(@Header("Authorization") token: String, @Path("userId") userId: Long, @Path("supervisorId") supervisorId: Long)
+
+    @DELETE("/user/{userId}/supervisor")
+    suspend fun dismissSupervisor(@Header("Authorization") token: String, @Path("userId") userId: Long)
+
 }

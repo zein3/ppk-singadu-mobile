@@ -34,8 +34,6 @@ class EditUserViewModel(
     private lateinit var token: String
     private val userId: Long = checkNotNull(savedStateHandle["userId"])
     var allSupervisors: List<User> = listOf()
-    var supervisorId by mutableLongStateOf(0L)
-        private set
     var supervisorName by mutableStateOf("")
         private set
 
@@ -50,7 +48,6 @@ class EditUserViewModel(
                 token = user.token
                 try {
                     userUiState = userRepository.getUserById(token, userId)
-                    supervisorId = userUiState.supervisor?.id ?: 0L
                     supervisorName = userUiState.supervisor?.name ?: ""
                 } catch (e: Exception) {
                     Log.e(TAG, "Exception: ${e.message}")
@@ -76,9 +73,16 @@ class EditUserViewModel(
         return roles.any { role -> role.name == roleName }
     }
 
-    fun setSelectedSupervisor(user: User) {
-        supervisorId = user.id ?: 0
-        supervisorName = user.name
+    suspend fun updateSupervisor(supervisor: User): UpdateSupervisorResult {
+        try {
+            userRepository.assignSupervisor(token, userUiState.id!!, supervisor.id!!)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            return UpdateSupervisorResult.Error
+        }
+
+        getUserData()
+        return UpdateSupervisorResult.Success
     }
 
     suspend fun updateUserRole(role: String, isAddingRole: Boolean): UpdateUserRoleResult {
@@ -111,6 +115,11 @@ class EditUserViewModel(
 }
 
 enum class UpdateUserRoleResult {
+    Success,
+    Error
+}
+
+enum class UpdateSupervisorResult {
     Success,
     Error
 }

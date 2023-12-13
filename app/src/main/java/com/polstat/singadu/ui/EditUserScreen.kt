@@ -135,8 +135,14 @@ fun EditUserScreen(
                         DropdownMenuItem(
                             text = { Text(text = supervisor.name) },
                             onClick = {
-                                editUserViewModel.setSelectedSupervisor(supervisor)
                                 supervisorDropdownExpanded = false
+                                showSpinner()
+                                scope.launch {
+                                    when (editUserViewModel.updateSupervisor(supervisor)) {
+                                        UpdateSupervisorResult.Success -> showMessage(R.string.sukses, R.string.berhasil_update_supervisor)
+                                        UpdateSupervisorResult.Error -> showMessage(R.string.error, R.string.network_error)
+                                    }
+                                }
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
