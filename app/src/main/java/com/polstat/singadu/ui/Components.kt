@@ -88,6 +88,7 @@ fun ReportItemCard(
     description: String,
     problemType: String,
     reporter: String,
+    reportedDate: String,
     status: String,
     modifier: Modifier = Modifier,
     options: @Composable (() -> Unit) = {}
@@ -127,6 +128,8 @@ fun ReportItemCard(
                         }
                     }
                 }
+                
+                Text(text = reportedDate)
                 
                 Spacer(modifier = Modifier.padding(5.dp))
 

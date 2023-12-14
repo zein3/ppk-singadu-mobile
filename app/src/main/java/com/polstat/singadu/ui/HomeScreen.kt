@@ -31,6 +31,10 @@ import androidx.compose.ui.unit.sp
 import com.polstat.singadu.R
 import com.polstat.singadu.model.Report
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,6 +127,7 @@ fun ReportsList(
                         description = report.description,
                         problemType = report.problemType.name,
                         reporter = report.reporter!!.name,
+                        reportedDate = toLocalFormat(report.reportedDate),
                         status = if (report.solved) stringResource(id = R.string.selesai) else stringResource(id = R.string.belum_selesai),
                         options = {
                             Column {
@@ -148,4 +153,9 @@ fun ReportsList(
             }
         }
     }
+}
+
+fun toLocalFormat(dateString: String): String {
+    val date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
+    return date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale.getDefault()))
 }
