@@ -47,6 +47,17 @@ class HomeViewModel(
         }
     }
 
+    fun filterReports(query: String) {
+        if (reportsUiState is ReportsUiState.Success) {
+            val filteredReports = reports.filter { report ->
+                report.description.contains(query, false) ||
+                report.problemType.name.contains(query, false) ||
+                (report.reporter?.name?.contains(query, false) ?: false)
+            }
+            reportsUiState = ReportsUiState.Success(filteredReports)
+        }
+    }
+
     private suspend fun getAllReports() {
         try {
             if (userState.isAdmin) {
