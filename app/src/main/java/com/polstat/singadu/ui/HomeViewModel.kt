@@ -48,6 +48,9 @@ class HomeViewModel(
     }
 
     fun filterReports(query: String) {
+        if (!::reports.isInitialized)
+            return
+
         if (reportsUiState is ReportsUiState.Success) {
             val filteredReports = reports.filter { report ->
                 report.description.contains(query, false) ||
@@ -58,7 +61,7 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun getAllReports() {
+    suspend fun getAllReports() {
         try {
             if (userState.isAdmin) {
                 reports = reportRepository.getAllReports(userState.token)
@@ -80,6 +83,34 @@ class HomeViewModel(
         reportsUiState = ReportsUiState.Success(reports)
     }
 
+    suspend fun changeReportStatus(report: Report): ReportOperationResult {
+        try {
+            report.id?.let {
+                reportRepository.updateReport(
+                    userState.token,
+                    it,
+                    report.copy(solved = !report.solved)
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            return ReportOperationResult.Error
+        }
+
+        return ReportOperationResult.Success
+    }
+
+    suspend fun deleteReport(report: Report): ReportOperationResult {
+        try {
+            report.id?.let { reportRepository.deleteReport(userState.token, it) }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            return ReportOperationResult.Error
+        }
+
+        return ReportOperationResult.Success
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -93,6 +124,11 @@ class HomeViewModel(
         }
     }
 
+}
+
+enum class ReportOperationResult {
+    Success,
+    Error
 }
 
 sealed interface ReportsUiState {

@@ -185,7 +185,9 @@ fun SingaduApp(
 
                 composable(route = SingaduScreen.Home.name) {
                     HomeScreen(
-                        homeViewModel = viewModel(factory = HomeViewModel.Factory)
+                        homeViewModel = viewModel(factory = HomeViewModel.Factory),
+                        showSpinner = { singaduAppViewModel.showSpinner() },
+                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) }
                     )
                 }
 

@@ -64,5 +64,10 @@
     <string name="berhasil_update_supervisor">Berhasil mengatur pengawas</string>
     <string name="selesai">Selesai</string>
     <string name="belum_selesai">Belum Selesai</string>
+    <string name="hapus_laporan">Hapus Laporan</string>
+    <string name="ubah_status">Ubah Status</string>
+    <string name="berhasil_hapus_laporan">Berhasil Menghapus Laporan</string>
+    <string name="berhasil_ubah_status">Berhasil Mengubah Status</string>
+    <string name="edit_laporan">Edit Laporan</string>
     <string name="logout">Keluar</string>
 </resources>
