@@ -298,14 +298,6 @@ fun SingaduAppBar(
                 )
             }
         },
-        actions = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = stringResource(id = R.string.profile)
-                )
-            }
-        },
         modifier = modifier
     )
 }

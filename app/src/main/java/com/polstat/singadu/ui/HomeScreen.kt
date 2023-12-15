@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.polstat.singadu.R
 import com.polstat.singadu.model.Report
 import kotlinx.coroutines.launch
@@ -66,7 +65,7 @@ fun HomeScreen(
                 homeViewModel.filterReports(query)
             },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
             label = {
                 Text(text = stringResource(id = R.string.cari))
             },
