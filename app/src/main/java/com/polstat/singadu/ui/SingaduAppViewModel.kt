@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 
 class SingaduAppViewModel(
@@ -76,13 +77,15 @@ class SingaduAppViewModel(
         }
     }
 
-    suspend fun logout() {
-        userPreferencesRepository.saveToken("")
-        userPreferencesRepository.saveName("")
-        userPreferencesRepository.saveEmail("")
-        userPreferencesRepository.saveIsAdmin(false)
-        userPreferencesRepository.saveIsSupervisor(false)
-        userPreferencesRepository.saveIsEnumerator(false)
+    fun logout() {
+        viewModelScope.launch {
+            userPreferencesRepository.saveToken("")
+            userPreferencesRepository.saveName("")
+            userPreferencesRepository.saveEmail("")
+            userPreferencesRepository.saveIsAdmin(false)
+            userPreferencesRepository.saveIsSupervisor(false)
+            userPreferencesRepository.saveIsEnumerator(false)
+        }
     }
 
     companion object {

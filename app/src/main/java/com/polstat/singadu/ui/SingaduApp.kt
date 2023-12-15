@@ -308,7 +308,7 @@ fun SingaduDrawer(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     closeDrawer: () -> Unit = {},
-    logout: suspend () -> Unit = {}
+    logout: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
 
@@ -367,11 +367,9 @@ fun SingaduDrawer(
             icons = Icons.Filled.ExitToApp,
             text = R.string.logout
         ) {
-            scope.launch {
-                logout()
-                navController.navigate(SingaduScreen.Login.name)
-                closeDrawer()
-            }
+            logout()
+            navController.navigate(SingaduScreen.Login.name)
+            closeDrawer()
         }
     }
 }
