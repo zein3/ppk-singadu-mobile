@@ -79,6 +79,8 @@ fun HomeScreen(
 
         ReportsList(
             reportsUiState = homeViewModel.reportsUiState,
+            isAdmin = homeViewModel.isAdmin(),
+            isSupervisor = homeViewModel.isSupervisor(),
             onDeleteClicked = { report ->
                 showSpinner()
                 scope.launch {
@@ -113,6 +115,8 @@ fun HomeScreen(
 @Composable
 fun ReportsList(
     reportsUiState: ReportsUiState,
+    isAdmin: Boolean,
+    isSupervisor: Boolean,
     onDeleteClicked: (Report) -> Unit = {},
     onChangeStatusClicked: (Report) -> Unit = {},
     onEditClicked: (Report) -> Unit = {}
@@ -136,21 +140,25 @@ fun ReportsList(
                         status = if (report.solved) stringResource(id = R.string.selesai) else stringResource(id = R.string.belum_selesai),
                         options = {
                             Column {
-                                DrawerNavigationItem(
-                                    icons = Icons.Filled.Delete,
-                                    text = R.string.hapus_laporan,
-                                    onClick = { onDeleteClicked(report) }
-                                )
-                                DrawerNavigationItem(
-                                    icons = Icons.Filled.Info,
-                                    text = R.string.ubah_status,
-                                    onClick = { onChangeStatusClicked(report) }
-                                )
-                                DrawerNavigationItem(
-                                    icons = Icons.Filled.Edit,
-                                    text = R.string.edit_laporan,
-                                    onClick = { onEditClicked(report) }
-                                )
+                                if (isAdmin) {
+                                    DrawerNavigationItem(
+                                        icons = Icons.Filled.Delete,
+                                        text = R.string.hapus_laporan,
+                                        onClick = { onDeleteClicked(report) }
+                                    )
+                                } else if (isSupervisor) {
+                                    DrawerNavigationItem(
+                                        icons = Icons.Filled.Info,
+                                        text = R.string.ubah_status,
+                                        onClick = { onChangeStatusClicked(report) }
+                                    )
+                                } else {
+                                    DrawerNavigationItem(
+                                        icons = Icons.Filled.Edit,
+                                        text = R.string.edit_laporan,
+                                        onClick = { onEditClicked(report) }
+                                    )
+                                }
                             }
                         }
                     )

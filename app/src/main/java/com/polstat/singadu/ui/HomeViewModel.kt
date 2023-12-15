@@ -47,6 +47,14 @@ class HomeViewModel(
         }
     }
 
+    fun isAdmin(): Boolean {
+        return userState.isAdmin
+    }
+
+    fun isSupervisor(): Boolean {
+        return userState.isSupervisor
+    }
+
     fun filterReports(query: String) {
         if (!::reports.isInitialized)
             return
