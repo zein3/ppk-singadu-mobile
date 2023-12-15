@@ -255,7 +255,8 @@ fun SingaduApp(
                     EditReportScreen(
                         editReportViewModel = viewModel(factory = EditReportViewModel.Factory),
                         showSpinner = { singaduAppViewModel.showSpinner() },
-                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) }
+                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) },
+                        navigateBack = { navController.navigate(SingaduScreen.Home.name) }
                     )
                 }
             }

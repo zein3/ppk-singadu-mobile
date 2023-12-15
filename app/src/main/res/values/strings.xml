@@ -70,5 +70,6 @@
     <string name="berhasil_ubah_status">Berhasil Mengubah Status</string>
     <string name="edit_laporan">Edit Laporan</string>
     <string name="form_edit_laporan">Form Edit Laporan</string>
+    <string name="berhasil_ubah_laporan">Berhasil Mengubah Laporan</string>
     <string name="logout">Keluar</string>
 </resources>

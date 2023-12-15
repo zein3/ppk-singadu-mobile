@@ -87,6 +87,21 @@ class EditReportViewModel(
         selectedProblemTypeName = ptype.name
     }
 
+    suspend fun editReport(): EditReportResult {
+        try {
+            reportRepository.updateReport(token, reportId, report.copy(
+                description = deskripsi,
+                reportedDate = reportedDate,
+                problemType = ProblemType(id = selectedProblemTypeId, name = selectedProblemTypeName)
+            ))
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            return EditReportResult.Error
+        }
+
+        return EditReportResult.Success
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -101,4 +116,9 @@ class EditReportViewModel(
         }
     }
 
+}
+
+enum class EditReportResult {
+    Success,
+    Error
 }
