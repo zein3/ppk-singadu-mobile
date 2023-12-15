@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.polstat.singadu.R
 import com.polstat.singadu.model.Report
 import kotlinx.coroutines.launch
@@ -42,7 +43,8 @@ fun HomeScreen(
     homeViewModel: HomeViewModel,
     modifier: Modifier = Modifier,
     showSpinner: () -> Unit = {},
-    showMessage: (Int, Int) -> Unit = { _, _ -> }
+    showMessage: (Int, Int) -> Unit = { _, _ -> },
+    navigateToEditScreen: (Long) -> Unit
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
@@ -100,6 +102,9 @@ fun HomeScreen(
                         ReportOperationResult.Error -> showMessage(R.string.error, R.string.network_error)
                     }
                 }
+            },
+            onEditClicked = { report ->
+                report.id?.let { navigateToEditScreen(it) }
             }
         )
     }

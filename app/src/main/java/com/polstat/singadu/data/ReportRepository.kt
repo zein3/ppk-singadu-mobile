@@ -10,6 +10,7 @@ interface ReportRepository {
     suspend fun getReportsByUser(token: String, userId: Long): List<Report>
     suspend fun deleteReport(token: String, reportId: Long)
     suspend fun updateReport(token: String, reportId: Long, report: Report)
+    suspend fun getReportById(token: String, reportId: Long): Report
 }
 
 class NetworkReportRepository(private val reportService: ReportService) : ReportRepository {
@@ -18,4 +19,5 @@ class NetworkReportRepository(private val reportService: ReportService) : Report
     override suspend fun getReportsByUser(token: String, userId: Long) = reportService.getReportByUser("Bearer $token", userId)
     override suspend fun deleteReport(token: String, reportId: Long) = reportService.deleteReport("Bearer $token", reportId)
     override suspend fun updateReport(token: String, reportId: Long, report: Report) = reportService.updateReport("Bearer $token", reportId, report)
+    override suspend fun getReportById(token: String, reportId: Long) = reportService.getReportById("Bearer $token", reportId)
 }

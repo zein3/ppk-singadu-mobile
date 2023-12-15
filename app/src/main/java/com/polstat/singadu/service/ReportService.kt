@@ -25,4 +25,7 @@ interface ReportService {
 
     @PUT("/report/{reportId}")
     suspend fun updateReport(@Header("Authorization") token: String, @Path("reportId") reportId: Long, @Body report: Report)
+
+    @GET("/report/{reportId}")
+    suspend fun getReportById(@Header("Authorization") token: String, @Path("reportId") reportId: Long): Report
 }

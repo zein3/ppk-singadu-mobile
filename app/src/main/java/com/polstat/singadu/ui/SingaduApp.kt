@@ -65,7 +65,8 @@ enum class SingaduScreen {
     CreateProblemType,
     UserManagement,
     EditUser,
-    CreateReport
+    CreateReport,
+    EditReport
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -187,7 +188,8 @@ fun SingaduApp(
                     HomeScreen(
                         homeViewModel = viewModel(factory = HomeViewModel.Factory),
                         showSpinner = { singaduAppViewModel.showSpinner() },
-                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) }
+                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) },
+                        navigateToEditScreen = { reportId -> navController.navigate("${SingaduScreen.EditReport.name}/$reportId") }
                     )
                 }
 
@@ -239,6 +241,19 @@ fun SingaduApp(
                 composable(route = SingaduScreen.CreateReport.name) {
                     CreateReportScreen(
                         createReportViewModel = viewModel(factory = CreateReportViewModel.Factory),
+                        showSpinner = { singaduAppViewModel.showSpinner() },
+                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) }
+                    )
+                }
+
+                composable(
+                    route = "${SingaduScreen.EditReport.name}/{reportId}",
+                    arguments = listOf(navArgument("reportId") {
+                        type = NavType.LongType
+                    })
+                ) {
+                    EditReportScreen(
+                        editReportViewModel = viewModel(factory = EditReportViewModel.Factory),
                         showSpinner = { singaduAppViewModel.showSpinner() },
                         showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) }
                     )
